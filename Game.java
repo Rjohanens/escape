@@ -21,24 +21,20 @@ import java.util.Stack;
 public class Game 
 {
     private Parser parser;
-    private Room startingRoom;
-    private Room currentRoom;
-    private Room previousRoom;
-    private Stack<Room> historyRooms;
+    private Player player;
     /**
      * Create the game and initialise its internal map.
      */
     public Game() 
     {
-        createRooms();
+        createGame();
         parser = new Parser();
-        historyRooms = new Stack<Room>();
     }
 
     /**
      * Create all the rooms, link their exits together and place items in the rooms.
      */
-    private void createRooms()
+    private void createGame()
     {
         // all rooms
         Room basement, livingroom, kitchen, bedroom, bathroom, garage, corridor;
@@ -46,6 +42,10 @@ public class Game
         //all items
         
         Item apple, banana;
+        
+        //create player
+        
+        player = new Player(10, 1);
         
         // create the rooms
         basement = new Room("in the basement");
@@ -84,8 +84,8 @@ public class Game
         garage.addItem("apple", apple);
         livingroom.addItem("banana", banana);
         
-        previousRoom = basement; //first room
-        currentRoom = basement; //start in basement
+        player.setPreviousRoom(basement); //begin room
+        player.setCurrentRoom(basement); //start game in the basement
     }
     
     /**
@@ -111,7 +111,7 @@ public class Game
      */
     
     private void printLocationInfo(){
-        System.out.println(currentRoom.getLongDescription());
+        System.out.println(player.getCurrentRoom().getLongDescription());
     }
     /**
      * Print out the opening message for the player.
@@ -181,17 +181,17 @@ public class Game
      * Simulate looking around in the room.
      */
     private void look(){
-        System.out.println(currentRoom.getLongDescription());
+        System.out.println(player.getCurrentRoom().getLongDescription());
     }
     
     private void back(){
-        if (historyRooms.empty()){   
-            System.out.println("You are in the first room!");
-        }
+        Room previousRoom = player.getPreviousRoom();
         
-        else{
-            currentRoom = historyRooms.pop();
-            System.out.println(currentRoom.getLongDescription());
+        if(previousRoom != null){
+            player.setCurrentRoom(previousRoom);
+            printLocationInfo();
+        }else{
+            System.out.println("There is no previous room");
         }
     }
     
@@ -210,15 +210,15 @@ public class Game
         String direction = command.getSecondWord();
 
         // Try to leave current room.
-        Room nextRoom = currentRoom.getExit(direction);
+        Room nextRoom = player.getCurrentRoom().getExit(direction);
 
         if (nextRoom == null) {
             System.out.println("There is no door!");
         }
         else {
-            historyRooms.push(currentRoom);
-            currentRoom = nextRoom;
-            printLocationInfo();
+            player.setPreviousRoom(player.getCurrentRoom());
+            player.setCurrentRoom(nextRoom);
+            printLocationInfo(); 
         }
     }
 
