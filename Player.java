@@ -1,5 +1,7 @@
 
 import java.util.Stack;
+import java.util.HashMap;
+import java.util.Set;
 
 /**
  * class Player - geef hier een beschrijving van deze class
@@ -16,12 +18,17 @@ public class Player
     private Room previousRoom;
     private Stack<Room> roomHistory;
     
+    private HashMap<String, Item> inventory;
     
-    public Player(int maxWeight, int currentWeight){
-        this.maxWeight = maxWeight;
+    
+    
+    public Player(int currentWeight, int maxWeight){
+
         this.currentWeight = currentWeight;
+        this.maxWeight = maxWeight;
         
         roomHistory = new Stack<Room>();
+        inventory = new HashMap<>();
     }
     
     public Room getCurrentRoom(){
@@ -29,7 +36,7 @@ public class Player
     }
     
     public void setCurrentRoom(Room currentRoom) {
-	this.currentRoom = currentRoom;
+    this.currentRoom = currentRoom;
     }
     
     public Room getPreviousRoom(){
@@ -52,5 +59,45 @@ public class Player
         }else{
             return roomHistory;
         }
+    }
+    
+    public boolean pickUpItem(String itemName, Item item){
+        if(canPickUpItem(item)){
+            inventory.put(itemName, item);
+            currentWeight += item.getItemWeight();
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    public void dropItem(){
+        
+    }
+    
+    public String getInventory(){
+        String returnString = "Your current items are:";
+        
+        if(inventory.isEmpty()){
+            returnString += " " + "no items in inventory";
+        }else{
+            Set<String> items = inventory.keySet();
+            for(String object : items){
+                returnString += " " + object;
+            }
+        }
+        
+        return returnString;
+    }
+    
+    public int getCurrentWeight(){
+        return currentWeight;
+    }
+    
+    public boolean canPickUpItem(Item item) {
+        if ((currentWeight + item.getItemWeight()) > maxWeight) {
+            return false;
+        }
+        return true;
     }
 }

@@ -86,7 +86,7 @@ public class Room
      * @return Een omschrijving van de ruimte en haar uitgangen
      */
     public String getLongDescription(){
-        return "You are " + description + ".\n" + getItems() + ".\n" + getExitString();
+        return "You are " + description + ".\n" + getItemString() + ".\n" + getExitString();
     }
     
     /**
@@ -96,7 +96,7 @@ public class Room
      *     Items in this room: no items in this room
      * @return Een lijst van alle items in de ruimte
      */
-    public String getItems(){
+    public String getItemString(){
         String returnString = "Items in this room:";
         
         if(items.isEmpty()){
@@ -118,6 +118,12 @@ public class Room
     public void addItem(String itemName, Item item){
         items.put(itemName, item);
     }
-
-
+    
+    public Item getItem(String itemKey){
+        return items.get(itemKey);
+    }
+    
+    public void removeItem(String itemName){
+        items.remove(itemName);
+    }
 }

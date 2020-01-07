@@ -17,4 +17,8 @@ public class Item
         this.description = description;
         this.weight = weight;
     }
+    
+    public int getItemWeight(){
+        return weight;
+    }
 }

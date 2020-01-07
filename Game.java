@@ -41,11 +41,11 @@ public class Game
         
         //all items
         
-        Item apple, banana;
+        Item apple, banana, testItem;
         
         //create player
         
-        player = new Player(10, 1);
+        player = new Player(0, 10);
         
         // create the rooms
         basement = new Room("in the basement");
@@ -57,8 +57,9 @@ public class Game
         corridor = new Room("in the corridor");
         
         //create items
-        apple = new Item("apple", 2);
-        banana = new Item("banana", 3);
+        apple = new Item("apple", 1);
+        banana = new Item("banana", 2);
+        testItem = new Item("test", 8);
         
         // initialise room exits
         basement.setExits("up", garage);
@@ -82,6 +83,7 @@ public class Game
         
         //initialize items
         garage.addItem("apple", apple);
+        garage.addItem("test", testItem);
         livingroom.addItem("banana", banana);
         
         player.setPreviousRoom(basement); //begin room
@@ -153,6 +155,12 @@ public class Game
         else if (commandWord.equals("back")){
             back();
         }
+        else if (commandWord.equals("take")){
+            take(command);
+        }
+        else if(commandWord.equals("show")){
+            show();
+        }
         else if (commandWord.equals("quit")) {
             wantToQuit = quit(command);
         }
@@ -176,12 +184,45 @@ public class Game
         System.out.println();
     }
     
+    private void take(Command command){
+       if(!command.hasSecondWord()) {
+            // if there is no second word, we don't know what to take...
+            System.out.println("Take what?");
+            return;
+        }
+        
+        String itemName = command.getSecondWord();
+        
+        Item item = player.getCurrentRoom().getItem(itemName);
+        
+        //try picking up item
+        if(item == null){
+            System.out.println("Can't find that item");
+        }
+        if(player.pickUpItem(itemName, item)){
+            
+            //if true
+            player.getCurrentRoom().removeItem(itemName);
+            System.out.println("Item taken");
+        }
+        
+        else{
+            System.out.println("Can't pick up item");
+        }
+    }
+    
     /**
      * Print out information about the room.
      * Simulate looking around in the room.
      */
     private void look(){
         System.out.println(player.getCurrentRoom().getLongDescription());
+    }
+    
+    private void show(){
+        System.out.print(player.getInventory());
+        System.out.println();
+        System.out.println("Your current weight is: " + player.getCurrentWeight());
     }
     
     private void back(){
