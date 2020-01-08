@@ -66,12 +66,24 @@ public class Player
             inventory.put(itemName, item);
             currentWeight += item.getItemWeight();
             return true;
-        }else{
+        }
+        
+        else{
             return false;
         }
     }
     
-    public void dropItem(){
+    public boolean dropItem(String itemName){
+        if(inventory.containsKey(itemName)){
+            Item itemToDrop = inventory.get(itemName);
+            currentWeight -= itemToDrop.getItemWeight();
+            inventory.remove(itemName);
+            return true;
+        }
+        
+        else{
+            return false;
+        }
         
     }
     
@@ -90,6 +102,10 @@ public class Player
         return returnString;
     }
     
+    public Item getInventoryByName(String itemName){
+        return inventory.get(itemName);
+    }
+    
     public int getCurrentWeight(){
         return currentWeight;
     }
@@ -100,4 +116,5 @@ public class Player
         }
         return true;
     }
+
 }

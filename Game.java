@@ -19,9 +19,14 @@ import java.util.Stack;
  */
 
 public class Game 
-{
+{   
     private Parser parser;
     private Player player;
+    
+    public static void main(String[] args) {
+        Game game = new Game();
+        game.play();
+    }
     /**
      * Create the game and initialise its internal map.
      */
@@ -159,6 +164,9 @@ public class Game
         else if (commandWord.equals("take")){
             take(command);
         }
+        else if (commandWord.equals("drop")){
+            drop(command);
+        }
         else if(commandWord.equals("show")){
             show();
         }
@@ -214,6 +222,31 @@ public class Game
         
         else{
             System.out.println("Can't pick up the item you want.");
+        }
+    }
+    
+    private void drop(Command command){
+        if(!command.hasSecondWord()) {
+            //if there is no second word, we don't know what to drop...
+            System.out.println("Drop what?");
+            return;
+        }
+        
+        String itemName = command.getSecondWord();
+        
+        Item item = player.getInventoryByName(itemName);
+        
+        if(item == null){
+            System.out.println("Can't find that item");
+        }
+        
+        if(player.dropItem(itemName)){
+            player.getCurrentRoom().addItem(itemName, item);
+            System.out.println("Item dropped");
+        }
+        
+        else{
+            System.out.println("Can't drop item");
         }
     }
     
