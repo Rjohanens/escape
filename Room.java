@@ -60,7 +60,7 @@ public class Room
      * @return Een omschrijving van de aanwezige uitgangen in de ruimte.
      */
     public String getExitString(){
-        String returnString = "Exits:";
+        String returnString = "You can walk in these directions: ";
         
         Set<String> keys = exits.keySet();
         for(String exit : keys){
@@ -86,7 +86,7 @@ public class Room
      * @return Een omschrijving van de ruimte en haar uitgangen
      */
     public String getLongDescription(){
-        return "You are " + description + ".\n" + getItemString() + ".\n" + getExitString();
+        return description + ".\n" + getItemString() + ".\n" + getExitString();
     }
     
     /**
@@ -97,10 +97,10 @@ public class Room
      * @return Een lijst van alle items in de ruimte
      */
     public String getItemString(){
-        String returnString = "Items in this room:";
+        String returnString = "In this room you can find these things that might be useful for you:";
         
         if(items.isEmpty()){
-            returnString += " " + "no items in this room";
+            returnString += " " + "There are no items in this room";
         }else{
             Set<String> item = items.keySet();
             for(String object : item){

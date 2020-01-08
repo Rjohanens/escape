@@ -48,13 +48,13 @@ public class Game
         player = new Player(0, 10);
         
         // create the rooms
-        basement = new Room("in the basement");
-        livingroom = new Room("in the living room");
-        kitchen = new Room("in the kitchen");
-        garage = new Room("in the garage");
-        bathroom = new Room("in the bathroom");
-        bedroom = new Room("in the bedroom");
-        corridor = new Room("in the corridor");
+        basement = new Room("Brrr, it's cold in the basement here");
+        livingroom = new Room("Wow! This room is big! It looks like a living room!");
+        kitchen = new Room("Oh this is the kitchen!");
+        garage = new Room("What a big cars in this garage!");
+        bathroom = new Room("Hmm I'm now in the badroom.");
+        bedroom = new Room("Oké this is the bedroom.");
+        corridor = new Room("I'm walking in the corridor, I think");
         
         //create items
         apple = new Item("apple", 1);
@@ -121,8 +121,9 @@ public class Game
     private void printWelcome()
     {
         System.out.println();
-        System.out.println("Welcome to the World of Zuul!");
-        System.out.println("World of Zuul is a new, incredibly boring adventure game.");
+        System.out.println("Welcome to Escape!");
+        System.out.println("In Escape you have to escape the house!");
+        System.out.println("The way you can escape is by picking up items\nand discovering different rooms in the house.");
         System.out.println("Type 'help' if you need help.");
         System.out.println();
         printLocationInfo();
@@ -177,10 +178,15 @@ public class Game
      */
     private void printHelp() 
     {
-        System.out.println("You are lost. You are alone. You wander");
-        System.out.println("around at the university.");
+        System.out.println("You are alone in an abandoned and spooky house and you have to escape.");
         System.out.println();
         System.out.print(parser.showCommands());
+        System.out.println();
+        System.out.println("To move inside of the house, you can say for example: go up garage");
+        System.out.println("Go back: back");
+        System.out.println("Pick up an item: take (name of the item) ");
+        System.out.println("See which items you have: show item");
+        System.out.println("Stop with the game: quit");
         System.out.println();
     }
     
@@ -207,7 +213,7 @@ public class Game
         }
         
         else{
-            System.out.println("Can't pick up item");
+            System.out.println("Can't pick up the item you want.");
         }
     }
     
