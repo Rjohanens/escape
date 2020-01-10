@@ -22,6 +22,12 @@ public class Room
     private HashMap<String, Room> exits;
     private HashMap<String, Item> items;
     
+    private String lockedString;
+    private String lockedDirection;
+    private String itemToUnlock;
+    
+    private boolean doorIsUnlocked;
+ 
     /**
      * Create a room described "description". Initially, it has
      * no exits. "description" is something like "a kitchen" or
@@ -34,7 +40,7 @@ public class Room
         exits = new HashMap<>();
         items = new HashMap<>();
     }
-
+    
     /**
      * Define the exits of this room.  Every direction either leads
      * to another room or is null (no exit there).
@@ -125,5 +131,38 @@ public class Room
     
     public void removeItem(String itemName){
         items.remove(itemName);
+    }
+    
+    public void setLockedExit(String direction){
+        lockedString = "The " + direction + " exit is locked! Find an item to unlock this exit.";
+        lockedDirection = direction;
+    }
+    
+    public String getLockedExitString(){
+        return lockedString;
+    }
+    
+    public String getLockedDirection(){
+        return lockedDirection;
+    }
+    
+    public void setItemToUnlock(String itemName){
+        itemToUnlock = itemName;
+    }
+    
+    public String getItemToUnlock(){
+        return itemToUnlock;
+    }
+    
+    public void setUnlockedDoor(String direction){
+       doorIsUnlocked = true;
+    }
+    
+    public boolean getUnlockedDoor(){
+        if(doorIsUnlocked == true){
+            return true;
+        }
+        
+        return false;
     }
 }

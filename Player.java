@@ -20,8 +20,6 @@ public class Player
     
     private HashMap<String, Item> inventory;
     
-    
-    
     public Player(int currentWeight, int maxWeight){
 
         this.currentWeight = currentWeight;
@@ -104,6 +102,13 @@ public class Player
     
     public Item getInventoryByName(String itemName){
         return inventory.get(itemName);
+    }
+    
+    public boolean isInInventory(String itemName){
+        if(inventory.containsKey(itemName)){
+            return true;
+        }
+        return false;
     }
     
     public int getCurrentWeight(){

@@ -42,11 +42,11 @@ public class Game
     private void createGame()
     {
         // all rooms
-        Room basement, livingroom, kitchen, bedroom, bathroom, garage, corridor;
+        Room basement, livingroom, kitchen, bedroom, bathroom, garage, corridor, outside;
         
         //all items
         
-        Item apple, banana, testItem;
+        Item apple, banana, testItem, crowbar, key;
         
         //create player
         
@@ -58,13 +58,16 @@ public class Game
         kitchen = new Room("Oh this is the kitchen!");
         garage = new Room("What a big cars in this garage!");
         bathroom = new Room("Hmm I'm now in the badroom.");
-        bedroom = new Room("Oké this is the bedroom.");
+        bedroom = new Room("Ok, this is the bedroom.");
         corridor = new Room("I'm walking in the corridor, I think");
+        outside = new Room("Well done you are escaped!");
         
         //create items
         apple = new Item("apple", 1);
         banana = new Item("banana", 2);
         testItem = new Item("test", 8);
+        crowbar = new Item("crowbar", 3);
+        key = new Item("key", 2);
         
         // initialise room exits
         basement.setExits("up", garage);
@@ -74,6 +77,7 @@ public class Game
         
         corridor.setExits("south", garage);
         corridor.setExits("north", livingroom);
+        corridor.setExits("east", outside);
         
         livingroom.setExits("south", corridor);
         livingroom.setExits("north", kitchen);
@@ -89,7 +93,20 @@ public class Game
         //initialize items
         garage.addItem("apple", apple);
         garage.addItem("test", testItem);
+        
         livingroom.addItem("banana", banana);
+        
+        basement.addItem("crowbar", crowbar);
+        
+        livingroom.addItem("key", key);
+        
+        //set locked exits
+        basement.setLockedExit("up");
+        corridor.setLockedExit("east");
+        
+        //set items to unlock exit
+        basement.setItemToUnlock("crowbar");
+        corridor.setItemToUnlock("key");
         
         player.setPreviousRoom(basement); //begin room
         player.setCurrentRoom(basement); //start game in the basement
@@ -120,6 +137,7 @@ public class Game
     private void printLocationInfo(){
         System.out.println(player.getCurrentRoom().getLongDescription());
     }
+    
     /**
      * Print out the opening message for the player.
      */
@@ -193,7 +211,7 @@ public class Game
         System.out.println("To move inside of the house, you can say for example: go up garage");
         System.out.println("Go back: back");
         System.out.println("Pick up an item: take (name of the item) ");
-        System.out.println("See which items you have: show item");
+        System.out.println("See which items you have: show");
         System.out.println("Stop with the game: quit");
         System.out.println();
     }
@@ -291,11 +309,25 @@ public class Game
 
         // Try to leave current room.
         Room nextRoom = player.getCurrentRoom().getExit(direction);
-
+        Room currentRoom = player.getCurrentRoom();
+        
         if (nextRoom == null) {
             System.out.println("There is no door!");
         }
-        else {
+        
+        String lockedDirection = currentRoom.getLockedDirection();
+        
+        // Wanneer een speler een kant op wil gaan (direction),
+        // moet worden gecheckt of deze direction locked is,
+        // of de speler het item heeft om deze deur te unlocken en
+        // of de deur niet al eerder geopend is (wanneer de speler het
+        // item gedropt heeft).
+        if( direction.equals(lockedDirection) && (player.isInInventory(currentRoom.getItemToUnlock()) == false) && (currentRoom.getUnlockedDoor() == false)){
+            System.out.println("This door is locked! Try to find an item to unlock this exit.");
+            return;
+        }
+        else{
+            currentRoom.setUnlockedDoor(direction);
             player.setPreviousRoom(player.getCurrentRoom());
             player.setCurrentRoom(nextRoom);
             printLocationInfo(); 
