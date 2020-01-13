@@ -32,7 +32,6 @@ public class Game
      */
     public Game() 
     {
-        createGame();
         parser = new Parser();
     }
 
@@ -46,14 +45,14 @@ public class Game
         
         //all items
         
-        Item apple, banana, testItem, crowbar, keyFrontDoor;
+        Item crowbar, keyFrontDoor;
         
         //create player
         
         player = new Player(0, 10);
         
         // create the rooms
-        basement = new Room("Brrr, it's cold in the basement here");
+        basement = new Room("Brrr, it's cold in the basement!");
         livingroom = new Room("Wow! This room is big! It looks like a living room!");
         kitchen = new Room("Oh this is the kitchen!");
         garage = new Room("What a big cars in this garage!");
@@ -63,9 +62,6 @@ public class Game
         outside = new Room("Well done you are escaped!");
         
         //create items
-        apple = new Item("apple", 1);
-        banana = new Item("banana", 2);
-        testItem = new Item("test", 8);
         crowbar = new Item("crowbar", 3);
         keyFrontDoor = new Item("key", 2);
         
@@ -91,10 +87,7 @@ public class Game
         bathroom.setExits("west", bedroom);
         
         //initialize items
-        garage.addItem("apple", apple);
-        garage.addItem("test", testItem);
-        
-        livingroom.addItem("banana", banana);
+        livingroom.addItem("key", keyFrontDoor);
         
         basement.addItem("crowbar", crowbar);
         
@@ -128,14 +121,14 @@ public class Game
         System.out.println("Thank you for playing.  Good bye.");
     }
     
-    public void about()
+    private void about()
     {
+        System.out.println();
         System.out.println("Hey there! I heard you want to know more about this game!");
-        System.out.println("This game is created by: Rick, Lars and Teijmen.");
-        System.out.println("This game is a escape game.");
-        System.out.println("You need to escape within the time.");
+        System.out.println("You are kidnapped! Your goal is to escape within (x) minutes.");
         System.out.println("You can use several items to unlock doors and for other useabilities.");
-        System.out.println("We hope you enjoy the game, if you need any help on the way use the " + '"' + "help" + '"' + " command.");
+        System.out.println("Created by: Rick, Lars and Teijmen.");
+        System.out.println();
     }
     
     /**
@@ -151,13 +144,14 @@ public class Game
      */
     private void printWelcome()
     {
-        System.out.println();
+        System.out.println("###################################");
         System.out.println("Welcome to Escape!");
-        System.out.println("In Escape you have to escape the house!");
-        System.out.println("The way you can escape is by picking up items\nand discovering different rooms in the house.");
-        System.out.println("Type 'help' if you need help.");
         System.out.println();
-        printLocationInfo();
+        System.out.println("Type 'help' if you need help about the controls.");
+        System.out.println("Type 'about' if you want more information.");
+        System.out.println("Type 'start' if you are ready to play the game!");
+        System.out.println("###################################");
+        System.out.println();
     }
 
     /**
@@ -177,6 +171,12 @@ public class Game
         String commandWord = command.getCommandWord();
         if (commandWord.equals("help")) {
             printHelp();
+        }
+        else if(commandWord.equals("start")){
+            start();
+        }
+        else if(commandWord.equals("about")){
+            about();
         }
         else if (commandWord.equals("go")) {
             goRoom(command);
@@ -212,15 +212,16 @@ public class Game
      */
     private void printHelp() 
     {
-        System.out.println("You are alone in an abandoned and spooky house and you have to escape.");
         System.out.println();
         System.out.print(parser.showCommands());
         System.out.println();
-        System.out.println("To move inside of the house, you can say for example: go up garage");
-        System.out.println("Go back: back");
-        System.out.println("Pick up an item: take (name of the item) ");
-        System.out.println("See which items you have: show");
-        System.out.println("Stop with the game: quit");
+        System.out.println("Type 'go (direction)' to move.");
+        System.out.println("Type 'back' to go to back to the previous room.");
+        System.out.println("Type 'take (item name)' to take an item.");
+        System.out.println("Type 'drop (item name)' to drop an item");
+        System.out.println("Type 'show' to show your current inventory + current weight.");
+        System.out.println("Type 'look' to examine the room.");
+        System.out.println("Type 'quit' to stop the game.");
         System.out.println();
     }
     
@@ -342,7 +343,14 @@ public class Game
             printLocationInfo(); 
         }
     }
-
+    
+    
+    private void start(){
+        createGame();
+        printLocationInfo();
+    }
+    
+    
     /** 
      * "Quit" was entered. Check the rest of the command to see
      * whether we really quit the game.
