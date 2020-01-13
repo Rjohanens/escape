@@ -20,6 +20,12 @@ public class Player
     
     private HashMap<String, Item> inventory;
     
+    
+    /**
+     * constructor Player
+     * Een player krijgt een huidig gewicht (currentWeight),
+     * en een max gewicht (maxWeight)
+     */
     public Player(int currentWeight, int maxWeight){
 
         this.currentWeight = currentWeight;

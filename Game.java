@@ -46,7 +46,7 @@ public class Game
         
         //all items
         
-        Item apple, banana, testItem, crowbar, key;
+        Item apple, banana, testItem, crowbar, keyFrontDoor;
         
         //create player
         
@@ -67,7 +67,7 @@ public class Game
         banana = new Item("banana", 2);
         testItem = new Item("test", 8);
         crowbar = new Item("crowbar", 3);
-        key = new Item("key", 2);
+        keyFrontDoor = new Item("key", 2);
         
         // initialise room exits
         basement.setExits("up", garage);
@@ -98,8 +98,6 @@ public class Game
         
         basement.addItem("crowbar", crowbar);
         
-        livingroom.addItem("key", key);
-        
         //set locked exits
         basement.setLockedExit("up");
         corridor.setLockedExit("east");
@@ -107,7 +105,7 @@ public class Game
         //set items to unlock exit
         basement.setItemToUnlock("crowbar");
         corridor.setItemToUnlock("key");
-        
+
         player.setPreviousRoom(basement); //begin room
         player.setCurrentRoom(basement); //start game in the basement
     }
@@ -230,6 +228,7 @@ public class Game
         //try picking up item
         if(item == null){
             System.out.println("Can't find that item");
+            return;
         }
         if(player.pickUpItem(itemName, item)){
             
