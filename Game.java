@@ -130,6 +130,16 @@ public class Game
         System.out.println("Thank you for playing.  Good bye.");
     }
     
+    public void about()
+    {
+        System.out.println("Hey there! I heard you want to know more about this game!");
+        System.out.println("This game is created by: Rick, Lars and Teijmen");
+        System.out.println("This game is a escape game");
+        System.out.println("You need to escape within the time");
+        System.out.println("You can use several items to unlock doors and for other useabilities");
+        System.out.println("We hope you enjoy the game, if you need any help on the way use the " + '"' + "help" + '"' + " command");
+    }
+    
     /**
      * Print out information about the current room
      */
