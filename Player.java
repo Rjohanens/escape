@@ -20,6 +20,7 @@ public class Player
     
     private HashMap<String, Item> inventory;
     
+    private Room beamerLocation;
     
     /**
      * constructor Player
@@ -126,6 +127,18 @@ public class Player
             return false;
         }
         return true;
+    }
+    
+    public void setBeamerLocation(Room beamerLocation){
+        this.beamerLocation = beamerLocation;
+    }
+    
+    public Room getBeamerLocation(){
+        
+        if(beamerLocation != null){
+            return beamerLocation;
+        }
+        return null;
     }
 
 }

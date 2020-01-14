@@ -196,6 +196,9 @@ public class Game
         else if(commandWord.equals("show")){
             show();
         }
+        else if(commandWord.equals("beam")){
+            beam(command);
+        }
         else if (commandWord.equals("quit")) {
             wantToQuit = quit(command);
         }
@@ -218,9 +221,10 @@ public class Game
         System.out.println("Type 'go (direction)' to move.");
         System.out.println("Type 'back' to go to back to the previous room.");
         System.out.println("Type 'take (item name)' to take an item.");
-        System.out.println("Type 'drop (item name)' to drop an item");
+        System.out.println("Type 'drop (item name)' to drop an item.");
         System.out.println("Type 'show' to show your current inventory + current weight.");
         System.out.println("Type 'look' to examine the room.");
+        System.out.println("Type 'beam (go/set)' to set a beam location or go to a beam location.");
         System.out.println("Type 'quit' to stop the game.");
         System.out.println();
     }
@@ -238,14 +242,14 @@ public class Game
         
         //try picking up item
         if(item == null){
-            System.out.println("Can't find that item");
+            System.out.println("Can't find that item.");
             return;
         }
         if(player.pickUpItem(itemName, item)){
             
             //if true
             player.getCurrentRoom().removeItem(itemName);
-            System.out.println("Item taken");
+            System.out.println("Item taken.");
         }
         
         else{
@@ -265,16 +269,16 @@ public class Game
         Item item = player.getInventoryByName(itemName);
         
         if(item == null){
-            System.out.println("Can't find that item");
+            System.out.println("Can't find that item.");
         }
         
         if(player.dropItem(itemName)){
             player.getCurrentRoom().addItem(itemName, item);
-            System.out.println("Item dropped");
+            System.out.println("Item dropped.");
         }
         
         else{
-            System.out.println("Can't drop item");
+            System.out.println("Can't drop item.");
         }
     }
     
@@ -344,6 +348,35 @@ public class Game
         }
     }
     
+    private void beam(Command command){
+        
+        if(!command.hasSecondWord()){
+            // if there is no second word, we don't know where to go...
+            System.out.println("Set or go?");
+            return;
+        }
+        
+        String commandWord = command.getSecondWord();
+        
+        Room currentRoom = player.getCurrentRoom();
+        
+        if( (player.getBeamerLocation() == null) && (!commandWord.equals("set"))){
+            System.out.println("No beamer location set.");
+            return;
+        }
+        
+        if(commandWord.equals("set")){
+            player.setBeamerLocation(currentRoom);
+            System.out.println("Beamer location set succesfully.");
+        }
+        
+        else if (commandWord.equals("go")){
+            player.setPreviousRoom(currentRoom);
+            player.setCurrentRoom(player.getBeamerLocation());
+            System.out.println("Beam succesful.");
+            printLocationInfo();
+        }
+    }
     
     private void start(){
         createGame();
