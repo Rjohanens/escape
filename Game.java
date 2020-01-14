@@ -22,6 +22,7 @@ public class Game
 {   
     private Parser parser;
     private Player player;
+    boolean gameStarted = false;
     
     public static void main(String[] args) {
         Game game = new Game();
@@ -296,6 +297,9 @@ public class Game
         System.out.println("Your current weight is: " + player.getCurrentWeight());
     }
     
+    /** Keep history of all the player movements.
+     *  
+     */
     private void back(){
         Room previousRoom = player.getPreviousRoom();
         
@@ -348,6 +352,11 @@ public class Game
         }
     }
     
+    /**
+     *  Beam function. Check for 'beam set' or 'beam go' and
+     *  check in case of 'beam go' if beam location is already set,
+     *  else print error.
+     */
     private void beam(Command command){
         
         if(!command.hasSecondWord()){
@@ -378,9 +387,27 @@ public class Game
         }
     }
     
+    /**
+     *   "Start" was entered. Create the game, rooms, player
+     *   and items. Print location info about current room.
+     *   Set boolean gameStarted true, so we can only run
+     *   one game at the time.
+     *   
+     *   If the game is already started, tell player that the
+     *   game is already started.
+     */
     private void start(){
-        createGame();
-        printLocationInfo();
+        
+        if(gameStarted == false){
+           createGame();
+           printLocationInfo(); 
+           gameStarted = true;
+        }
+        
+        else{
+            System.out.println("Game already started.");
+        }
+        
     }
     
     
