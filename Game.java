@@ -349,6 +349,8 @@ public class Game extends MusicPlayer
             player.setPreviousRoom(player.getCurrentRoom());
             player.setCurrentRoom(nextRoom);
             printLocationInfo(); 
+            //wanneer iemand een kamer binnengaat speelt een geluidje af.
+            startPlaying("music/RELOADING.wav");
         }
     }
     
