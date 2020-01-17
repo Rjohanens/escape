@@ -18,7 +18,7 @@ import java.util.Stack;
  * @version 2016.02.29
  */
 
-public class Game 
+public class Game extends MusicPlayer 
 {   
     private Parser parser;
     private Player player;
@@ -249,6 +249,7 @@ public class Game
             //if true
             player.getCurrentRoom().removeItem(itemName);
             System.out.println("Item taken.");
+            startPlaying("music/MGS_ALERT.mp3");
         }
         
         else{
@@ -274,6 +275,7 @@ public class Game
         if(player.dropItem(itemName)){
             player.getCurrentRoom().addItem(itemName, item);
             System.out.println("Item dropped.");
+            startPlaying("music/SLIP.mp3");
         }
         
         else{
@@ -318,6 +320,7 @@ public class Game
         if(previousRoom != null){
             player.setCurrentRoom(previousRoom);
             printLocationInfo();
+            startPlaying("music/rewind_time.mp3");
         }else{
             System.out.println("There is no previous room");
         }
@@ -354,6 +357,7 @@ public class Game
         // item gedropt heeft).
         if( direction.equals(lockedDirection) && (player.isInInventory(currentRoom.getItemToUnlock()) == false) && (currentRoom.getUnlockedDoor() == false)){
             System.out.println("This door is locked! Try to find an item to unlock this exit.");
+            startPlaying("music/locked_door.mp3");
             return;
         }
         else{
@@ -361,6 +365,8 @@ public class Game
             player.setPreviousRoom(player.getCurrentRoom());
             player.setCurrentRoom(nextRoom);
             printLocationInfo(); 
+            //wanneer iemand een kamer binnengaat speelt een geluidje af.
+            startPlaying("music/minecraft_door.mp3");
         }
     }
     
@@ -396,6 +402,7 @@ public class Game
             player.setCurrentRoom(player.getBeamerLocation());
             System.out.println("Beam succesful.");
             printLocationInfo();
+            startPlaying("music/beam_sound.mp3");
         }
     }
     
@@ -435,6 +442,7 @@ public class Game
             return false;
         }
         else {
+            startPlaying("music/windows_shutdown.mp3");
             return true;  // signal that we want to quit
         }
     }
