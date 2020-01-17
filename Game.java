@@ -18,7 +18,7 @@ import java.util.Stack;
  * @version 2016.02.29
  */
 
-public class Game 
+public class Game extends MusicPlayer 
 {   
     private Parser parser;
     private Player player;
@@ -349,6 +349,8 @@ public class Game
             player.setPreviousRoom(player.getCurrentRoom());
             player.setCurrentRoom(nextRoom);
             printLocationInfo(); 
+            //wanneer iemand een kamer binnengaat speelt een geluidje af.
+            startPlaying("music/RELOADING.wav");
         }
     }
     
