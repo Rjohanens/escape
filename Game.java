@@ -251,6 +251,7 @@ public class Game extends MusicPlayer
             //if true
             player.getCurrentRoom().removeItem(itemName);
             System.out.println("Item taken.");
+            startPlaying("music/MGS_ALERT.mp3");
         }
         
         else{
@@ -276,6 +277,7 @@ public class Game extends MusicPlayer
         if(player.dropItem(itemName)){
             player.getCurrentRoom().addItem(itemName, item);
             System.out.println("Item dropped.");
+            startPlaying("music/SLIP.mp3");
         }
         
         else{
@@ -306,6 +308,7 @@ public class Game extends MusicPlayer
         if(previousRoom != null){
             player.setCurrentRoom(previousRoom);
             printLocationInfo();
+            startPlaying("music/rewind_time.mp3");
         }else{
             System.out.println("There is no previous room");
         }
@@ -350,7 +353,7 @@ public class Game extends MusicPlayer
             player.setCurrentRoom(nextRoom);
             printLocationInfo(); 
             //wanneer iemand een kamer binnengaat speelt een geluidje af.
-            startPlaying("music/RELOADING.wav");
+            startPlaying("music/minecraft_door.mp3");
         }
     }
     
@@ -386,6 +389,7 @@ public class Game extends MusicPlayer
             player.setCurrentRoom(player.getBeamerLocation());
             System.out.println("Beam succesful.");
             printLocationInfo();
+            startPlaying("music/beam_sound.mp3");
         }
     }
     
@@ -425,6 +429,7 @@ public class Game extends MusicPlayer
             return false;
         }
         else {
+            startPlaying("music/windows_shutdown.mp3");
             return true;  // signal that we want to quit
         }
     }
