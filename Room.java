@@ -22,10 +22,10 @@ public class Room
     private HashMap<String, Room> exits;
     private HashMap<String, Item> items;
     
-    private String lockedString;
     private String lockedDirection;
     private String itemToUnlock;
     
+    private String objectsInRoom;
     private boolean doorIsUnlocked;
  
     /**
@@ -134,12 +134,7 @@ public class Room
     }
     
     public void setLockedExit(String direction){
-        lockedString = "The " + direction + " exit is locked! Find an item to unlock this exit.";
         lockedDirection = direction;
-    }
-    
-    public String getLockedExitString(){
-        return lockedString;
     }
     
     public String getLockedDirection(){

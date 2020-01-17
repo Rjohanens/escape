@@ -45,11 +45,9 @@ public class Game
         Room basement, livingroom, kitchen, bedroom, bathroom, garage, corridor, outside;
         
         //all items
-        
         Item crowbar, keyFrontDoor;
         
         //create player
-        
         player = new Player(0, 10);
         
         // create the rooms
@@ -183,7 +181,7 @@ public class Game
             goRoom(command);
         }
         else if (commandWord.equals("look")){
-            look();
+            look(command);
         }
         else if (commandWord.equals("back")){
             back();
@@ -287,8 +285,22 @@ public class Game
      * Print out information about the room.
      * Simulate looking around in the room.
      */
-    private void look(){
-        System.out.println(player.getCurrentRoom().getLongDescription());
+    private void look(Command command){
+        
+        if(!command.hasSecondWord()){
+           System.out.println("I see.. ");
+           return;
+        }
+        
+        
+        
+    }
+    
+    private void examineItem(Command command){
+        if(!command.hasSecondWord()){
+           System.out.println("Examine what? ");
+           return;
+        }
     }
     
     private void show(){
