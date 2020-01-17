@@ -345,6 +345,7 @@ public class Game extends MusicPlayer
         // item gedropt heeft).
         if( direction.equals(lockedDirection) && (player.isInInventory(currentRoom.getItemToUnlock()) == false) && (currentRoom.getUnlockedDoor() == false)){
             System.out.println("This door is locked! Try to find an item to unlock this exit.");
+            startPlaying("music/locked_door.mp3");
             return;
         }
         else{
