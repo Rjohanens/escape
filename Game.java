@@ -18,7 +18,7 @@ import java.util.Stack;
  * @version 2016.02.29
  */
 
-public class Game 
+public class Game extends MusicPlayer 
 {   
     private Parser parser;
     private Player player;
