@@ -9,7 +9,7 @@ import java.util.TimerTask;
 public class Timer1
 {
     private boolean clockRunning = false;
-    int secondPassed = 9000;
+    int secondPassed = 900000; //15 min
     
     Timer timer = new Timer();
     TimerTask task = new TimerTask(){
@@ -17,14 +17,18 @@ public class Timer1
            if(clockRunning == true){
                 secondPassed--;
                 System.out.println(secondPassed);
-                int minutes = (secondPassed / 1000) / 60;
-                int seconds = (secondPassed / 1000) % 60;
-                System.out.println(minutes + ":" + seconds);
+                //int minutes = (secondPassed / 1000) / 60;
+                //int seconds = (secondPassed / 1000) % 60;
            }
         }
           
     };
-
+    public void getTime(){
+        int timer = secondPassed;
+        int minutes = (secondPassed / 1000) / 60;
+        int seconds = (secondPassed / 1000) % 60;
+        System.out.println(minutes + ":" + seconds);
+    }
     
     public void startTimer(){
         clockRunning = true;
