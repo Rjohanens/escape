@@ -56,7 +56,6 @@ public class Room
      * als er in die richting geen ruimte is.
      */
     public Room getExit(String direction){
-        
         return exits.get(direction);
     }
     
@@ -103,7 +102,7 @@ public class Room
      * @return Een lijst van alle items in de ruimte
      */
     public String getItemString(){
-        String returnString = "In this room you can find these things that might be useful for you:";
+        String returnString = "In this room you can find these things:";
         
         if(items.isEmpty()){
             returnString += " " + "There are no items in this room";
