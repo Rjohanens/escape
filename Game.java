@@ -22,9 +22,9 @@ public class Game extends MusicPlayer
 {   
     private Parser parser;
     private Player player;
-    private Timer1 timer;
+    private CountdownTimer timer;
     private MusicPlayer musicplayer;
-    boolean gameStarted = false;
+    public boolean gameStarted = false;
     
     public static void main(String[] args) {
         Game game = new Game();
@@ -36,6 +36,8 @@ public class Game extends MusicPlayer
     public Game() 
     {
         parser = new Parser();
+        //create timer
+        timer = new CountdownTimer();
     }
 
     /**
@@ -105,6 +107,9 @@ public class Game extends MusicPlayer
 
         player.setPreviousRoom(basement); //begin room
         player.setCurrentRoom(basement); //start game in the basement
+        
+        timer.startTimer();
+
     }
     
     /**
@@ -114,16 +119,17 @@ public class Game extends MusicPlayer
     public void play() 
     {            
         printWelcome();
-        timer = new Timer1(); 
         // Enter the main command loop.  Here we repeatedly read commands and
         // execute them until the game is over.
-                
+        
         boolean finished = false;
+        
         while (! finished) {
             if(checkWin()){     //check win state
+                timer.stopTimer();
                 System.out.println("###################################");
-                System.out.println("Well done, you are escaped!");
-                System.out.println("You time was: x minutes.");
+                System.out.println("Well done, you have escaped!");
+                System.out.println("You time was: " + (14 - timer.getMinutes()) + " minutes and " + (60%timer.getSeconds()) + " seconds."); //bereken de verstreken tijd
                 finished = true;
                 gameStarted = false;
             }
@@ -150,7 +156,7 @@ public class Game extends MusicPlayer
      */
     
     private void printLocationInfo(){
-        
+
         if(checkWin()){     //wanneer de speler gewonnen heeft, hoeft er geen omschrijving gegeven te worden
             return;
         }
@@ -339,6 +345,7 @@ public class Game extends MusicPlayer
         }
         else if (showCommand.equals("time")){
             //laat de speler zien hoeveel tijd hij nog heeft
+            System.out.println("You have " + timer.getMinutes() + " minutes and " + timer.getSeconds() + " seconds left.");
         }
         
         else{
@@ -483,6 +490,10 @@ public class Game extends MusicPlayer
         }
         
         return false;
+    }
+    
+    public void checkLose(){
+        
     }
     
     

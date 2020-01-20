@@ -6,10 +6,11 @@ import java.util.TimerTask;
  * @author (jouw naam)
  * @version (versie nummer of datum)
  */
-public class Timer1
+public class CountdownTimer
 {
     private boolean clockRunning = false;
-    int secondPassed = 900; //15 min
+    public boolean gameStopped = false;
+    public int secondPassed = 30; //15 min
     Timer timer = new Timer();
     TimerTask task = new TimerTask(){
         public void run(){
@@ -33,6 +34,7 @@ public class Timer1
                 if(secondPassed == 1){
                     System.out.println("Time is up! You got caught!");
                     clockRunning = false;
+                    gameStopped = true;
                 }
                 //int minutes = (secondPassed / 1000) / 60;
                 //int seconds = (secondPassed / 1000) % 60;
@@ -40,11 +42,18 @@ public class Timer1
         }
           
     };
-    public void getTime(){
+    
+    public int getMinutes(){
         int timer = secondPassed;
         int minutes = secondPassed / 60;
+        return minutes;
+    }
+    
+    public int getSeconds(){
+        int timer = secondPassed;
         int seconds = secondPassed % 60;
-        System.out.println(minutes + ":" + seconds);
+        
+        return seconds;
     }
     
     public void startTimer(){
@@ -54,5 +63,6 @@ public class Timer1
     
     public void stopTimer(){
         clockRunning = false;
+        gameStopped = true;
     }
 }
