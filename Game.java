@@ -45,7 +45,7 @@ public class Game extends MusicPlayer
         Room basement, livingroom, kitchen, bedroom, bathroom, garage, corridor, outside;
         
         //all items
-        Item crowbar, keyFrontDoor;
+        Item crowbar, keyFrontDoor, clock;
         
         //create player
         player = new Player(0, 10);
@@ -61,8 +61,9 @@ public class Game extends MusicPlayer
         outside = new Room("You are outside!");
         
         //create items
-        crowbar = new Item("crowbar", "With this item you can break open a door", 3);
+        crowbar = new Item("crowbar", "With this item you can break open the basementdoor", 3);
         keyFrontDoor = new Item("key", "This looks like a key to the front door", 2);
+        clock = new Item("clock", "You found the magic clock, you got 5 extra minutes!", 1);
         
         // initialise room exits
         basement.setExits("up", garage);
@@ -85,10 +86,12 @@ public class Game extends MusicPlayer
         
         bathroom.setExits("west", bedroom);
         
-        //initialize items
+        //add items to rooms
         livingroom.addItem("key", keyFrontDoor);
         
         basement.addItem("crowbar", crowbar);
+        
+        bedroom.addItem("clock", clock);
         
         //set locked exits
         basement.setLockedExit("up");
@@ -103,7 +106,8 @@ public class Game extends MusicPlayer
     }
     
     /**
-     *  Main play routine.  Loops until end of play.
+     *  Main play routine.  Loops until end of play. 
+     *  Check if player has won.
      */
     public void play() 
     {            
@@ -206,7 +210,7 @@ public class Game extends MusicPlayer
             drop(command);
         }
         else if ((commandWord.equals("show")) && (gameStarted == true)) {
-            show();
+            show(command);
         }
         else if ((commandWord.equals("examine")) && (gameStarted == true)) {
             examineItem(command);
@@ -319,10 +323,27 @@ public class Game extends MusicPlayer
         }
     }
     
-    private void show(){
-        System.out.print(player.getInventory());
-        System.out.println();
-        System.out.println("Your current weight is: " + player.getCurrentWeight());
+    private void show(Command command){
+        if(!command.hasSecondWord()){
+           System.out.println("Show inventory of time?");
+           return;
+        }
+        
+        String showCommand = command.getSecondWord();
+        
+        if(showCommand.equals("inventory")){
+            System.out.print(player.getInventory());
+            System.out.println();
+            System.out.println("Your current weight is: " + player.getCurrentWeight());
+        }
+        else if (showCommand.equals("time")){
+            //laat de speler zien hoeveel tijd hij nog heeft
+        }
+        
+        else{
+            System.out.println("Sorry, I don't understand.");
+        }
+       
     }
     
     /** Keep history of all the player movements.
