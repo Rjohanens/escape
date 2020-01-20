@@ -45,11 +45,9 @@ public class Game extends MusicPlayer
         Room basement, livingroom, kitchen, bedroom, bathroom, garage, corridor, outside;
         
         //all items
-        
         Item crowbar, keyFrontDoor;
         
         //create player
-        
         player = new Player(0, 10);
         
         // create the rooms
@@ -60,11 +58,11 @@ public class Game extends MusicPlayer
         bathroom = new Room("Hmm I'm now in the badroom.");
         bedroom = new Room("Ok, this is the bedroom.");
         corridor = new Room("I'm walking in the corridor, I think");
-        outside = new Room("Well done you are escaped!");
+        outside = new Room("You are outside!");
         
         //create items
-        crowbar = new Item("crowbar", 3);
-        keyFrontDoor = new Item("key", 2);
+        crowbar = new Item("crowbar", "With this item you can break open a door", 3);
+        keyFrontDoor = new Item("key", "This looks like a key to the front door", 2);
         
         // initialise room exits
         basement.setExits("up", garage);
@@ -116,8 +114,18 @@ public class Game extends MusicPlayer
                 
         boolean finished = false;
         while (! finished) {
-            Command command = parser.getCommand();
-            finished = processCommand(command);
+            
+            if(checkWin()){     //check win state
+                System.out.println("###################################");
+                System.out.println("Well done, you are escaped!");
+                System.out.println("You time was: x minutes.");
+                finished = true;
+                gameStarted = false;
+            }
+            else{
+                Command command = parser.getCommand();
+                finished = processCommand(command);
+            }
         }
         System.out.println("Thank you for playing.  Good bye.");
     }
@@ -125,7 +133,7 @@ public class Game extends MusicPlayer
     private void about()
     {
         System.out.println();
-        System.out.println("Hey there! I heard you want to know more about this game!");
+        System.out.println("Hi there! I heard you want to know more about this game!");
         System.out.println("You are kidnapped! Your goal is to escape within (x) minutes.");
         System.out.println("You can use several items to unlock doors and for other useabilities.");
         System.out.println("Created by: Rick, Lars and Teijmen.");
@@ -137,7 +145,13 @@ public class Game extends MusicPlayer
      */
     
     private void printLocationInfo(){
+        
+        if(checkWin()){     //wanneer de speler gewonnen heeft, hoeft er geen omschrijving gegeven te worden
+            return;
+        }
+        else{
         System.out.println(player.getCurrentRoom().getLongDescription());
+        }
     }
     
     /**
@@ -179,29 +193,33 @@ public class Game extends MusicPlayer
         else if(commandWord.equals("about")){
             about();
         }
-        else if (commandWord.equals("go")) {
+        else if ((commandWord.equals("go")) && (gameStarted == true)) {
             goRoom(command);
         }
-        else if (commandWord.equals("look")){
-            look();
-        }
-        else if (commandWord.equals("back")){
+        else if ((commandWord.equals("back")) && (gameStarted == true)) {
             back();
         }
-        else if (commandWord.equals("take")){
+        else if ((commandWord.equals("take")) && (gameStarted == true)) {
             take(command);
         }
-        else if (commandWord.equals("drop")){
+        else if ((commandWord.equals("drop")) && (gameStarted == true)) {
             drop(command);
         }
-        else if(commandWord.equals("show")){
+        else if ((commandWord.equals("show")) && (gameStarted == true)) {
             show();
         }
-        else if(commandWord.equals("beam")){
+        else if ((commandWord.equals("examine")) && (gameStarted == true)) {
+            examineItem(command);
+        }
+        else if ((commandWord.equals("beam")) && (gameStarted == true)) {
             beam(command);
         }
         else if (commandWord.equals("quit")) {
             wantToQuit = quit(command);
+        }
+        
+        else if(gameStarted == false){
+            System.out.println("Please start the game first.");
         }
 
         return wantToQuit;
@@ -224,7 +242,6 @@ public class Game extends MusicPlayer
         System.out.println("Type 'take (item name)' to take an item.");
         System.out.println("Type 'drop (item name)' to drop an item.");
         System.out.println("Type 'show' to show your current inventory + current weight.");
-        System.out.println("Type 'look' to examine the room.");
         System.out.println("Type 'beam (go/set)' to set a beam location or go to a beam location.");
         System.out.println("Type 'quit' to stop the game.");
         System.out.println();
@@ -272,6 +289,7 @@ public class Game extends MusicPlayer
         
         if(item == null){
             System.out.println("Can't find that item.");
+            return;
         }
         
         if(player.dropItem(itemName)){
@@ -285,12 +303,20 @@ public class Game extends MusicPlayer
         }
     }
     
-    /**
-     * Print out information about the room.
-     * Simulate looking around in the room.
-     */
-    private void look(){
-        System.out.println(player.getCurrentRoom().getLongDescription());
+    private void examineItem(Command command){
+        if(!command.hasSecondWord()){
+           System.out.println("Examine what? ");
+           return;
+        }
+        
+        String itemName = command.getSecondWord();
+        
+        if(player.getExamineString(itemName) != null){
+            System.out.println(player.getExamineString(itemName));
+        }
+        else{
+            System.out.println("You can only examine items that are in your inventory!");
+        }
     }
     
     private void show(){
@@ -334,6 +360,7 @@ public class Game extends MusicPlayer
         
         if (nextRoom == null) {
             System.out.println("There is no door!");
+            return;
         }
         
         String lockedDirection = currentRoom.getLockedDirection();
@@ -415,6 +442,25 @@ public class Game extends MusicPlayer
             System.out.println("Game already started.");
         }
         
+    }
+    
+    
+    /**
+     *  check of de speler gewonnen heeft. Wanneer de speler
+     *  'outside' is, heeft de speler gewonnen. Retourneer true
+     *  wanneer de speler outside is. 
+     *  
+     *  @return True wanneer de speler gewonnen heeft, anders false.
+     */
+    private boolean checkWin(){
+        
+        if(gameStarted){
+            if(player.getCurrentRoom().getDescription() == "You are outside!"){
+                return true;
+            }
+        }
+        
+        return false;
     }
     
     

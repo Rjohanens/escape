@@ -15,7 +15,6 @@ public class Player
     private int currentWeight;
     
     private Room currentRoom;
-    private Room previousRoom;
     private Stack<Room> roomHistory;
     
     private HashMap<String, Item> inventory;
@@ -127,6 +126,21 @@ public class Player
             return false;
         }
         return true;
+    }
+    
+    public String getExamineString(String itemName){
+        String returnString = "Examining: " + itemName + ".";
+        
+        if(isInInventory(itemName)){
+            
+            Item itemToExamine = inventory.get(itemName);
+            
+            returnString += " " + itemToExamine.getDescription() + ".";
+            
+            return returnString;
+        }
+        
+        return null;
     }
     
     public void setBeamerLocation(Room beamerLocation){

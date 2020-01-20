@@ -22,10 +22,10 @@ public class Room
     private HashMap<String, Room> exits;
     private HashMap<String, Item> items;
     
-    private String lockedString;
     private String lockedDirection;
     private String itemToUnlock;
     
+    private String objectsInRoom;
     private boolean doorIsUnlocked;
  
     /**
@@ -56,7 +56,6 @@ public class Room
      * als er in die richting geen ruimte is.
      */
     public Room getExit(String direction){
-        
         return exits.get(direction);
     }
     
@@ -103,7 +102,7 @@ public class Room
      * @return Een lijst van alle items in de ruimte
      */
     public String getItemString(){
-        String returnString = "In this room you can find these things that might be useful for you:";
+        String returnString = "In this room you can find these things:";
         
         if(items.isEmpty()){
             returnString += " " + "There are no items in this room";
@@ -134,12 +133,7 @@ public class Room
     }
     
     public void setLockedExit(String direction){
-        lockedString = "The " + direction + " exit is locked! Find an item to unlock this exit.";
         lockedDirection = direction;
-    }
-    
-    public String getLockedExitString(){
-        return lockedString;
     }
     
     public String getLockedDirection(){
