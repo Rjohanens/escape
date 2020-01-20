@@ -22,6 +22,8 @@ public class Game extends MusicPlayer
 {   
     private Parser parser;
     private Player player;
+    private Timer1 timer;
+    private MusicPlayer musicplayer;
     boolean gameStarted = false;
     
     public static void main(String[] args) {
@@ -112,13 +114,12 @@ public class Game extends MusicPlayer
     public void play() 
     {            
         printWelcome();
-
+        timer = new Timer1(); 
         // Enter the main command loop.  Here we repeatedly read commands and
         // execute them until the game is over.
                 
         boolean finished = false;
         while (! finished) {
-            
             if(checkWin()){     //check win state
                 System.out.println("###################################");
                 System.out.println("Well done, you are escaped!");

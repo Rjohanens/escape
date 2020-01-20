@@ -9,22 +9,43 @@ import java.util.TimerTask;
 public class Timer1
 {
     private boolean clockRunning = false;
-    int secondPassed = 9000;
-    
+    int secondPassed = 900; //15 min
     Timer timer = new Timer();
     TimerTask task = new TimerTask(){
         public void run(){
            if(clockRunning == true){
                 secondPassed--;
-                System.out.println(secondPassed);
-                int minutes = (secondPassed / 1000) / 60;
-                int seconds = (secondPassed / 1000) % 60;
-                System.out.println(minutes + ":" + seconds);
+                if(secondPassed == 899){
+                    System.out.println("You have 15 minutes left to escape!");
+                }
+                if(secondPassed == 600){
+                    System.out.println("You have 10 minutes left to escape!");
+                }
+                if(secondPassed == 300){
+                    System.out.println("You have 5 minutes left to escape!");
+                }
+                if(secondPassed == 60){
+                    System.out.println("You have 1 minute left to escape!");
+                }
+                if(secondPassed == 30){
+                    System.out.println("You have 30 seconds left to escape!");
+                }
+                if(secondPassed == 1){
+                    System.out.println("Time is up! You got caught!");
+                    clockRunning = false;
+                }
+                //int minutes = (secondPassed / 1000) / 60;
+                //int seconds = (secondPassed / 1000) % 60;
            }
         }
           
     };
-
+    public void getTime(){
+        int timer = secondPassed;
+        int minutes = secondPassed / 60;
+        int seconds = secondPassed % 60;
+        System.out.println(minutes + ":" + seconds);
+    }
     
     public void startTimer(){
         clockRunning = true;
