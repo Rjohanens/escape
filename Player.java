@@ -1,6 +1,7 @@
 
 import java.util.Stack;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -21,6 +22,8 @@ public class Player
     
     private Room beamerLocation;
     
+    private HashSet<Item> usedItems;
+    
     /**
      * constructor Player
      * Een player krijgt een huidig gewicht (currentWeight),
@@ -33,6 +36,7 @@ public class Player
         
         roomHistory = new Stack<Room>();
         inventory = new HashMap<>();
+        usedItems = new HashSet<>();
     }
     
     public Room getCurrentRoom(){
@@ -154,5 +158,15 @@ public class Player
         }
         return null;
     }
-
+    
+    public void setUsedItem(Item item){
+        usedItems.add(item);
+    }
+    
+    public boolean itemIsUsed(Item item){
+        if(usedItems.contains(item)){
+            return true;
+        }  
+        return false;
+    }
 }

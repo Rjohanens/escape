@@ -10,7 +10,7 @@ public class CountdownTimer
 {
     private boolean clockRunning = false;
     public boolean gameStopped = false;
-    public int secondPassed = 30; //15 min
+    public int secondPassed = 900; //15 min
     Timer timer = new Timer();
     TimerTask task = new TimerTask(){
         public void run(){

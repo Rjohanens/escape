@@ -13,6 +13,7 @@ public class Item
     private String description;
     private int weight;
     private String itemName;
+    private boolean isUseable;
     
     public Item(String itemName, String description, int weight){
         this.description = description;
