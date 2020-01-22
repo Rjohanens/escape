@@ -1,12 +1,8 @@
 /**
- * This class is part of the "World of Zuul" application. 
- * "World of Zuul" is a very simple, text based adventure game.  
- * 
- * This class holds an enumeration of all command words known to the game.
- * It is used to recognise commands as they are typed in.
+ * In deze klasse staan alle command words die je in de game kunt gebruiken
  *
- * @author  Michael Kölling and David J. Barnes
- * @version 2016.02.29
+ * @author  Rick Johannes, Teijmen van der Ploeg, Lars Bosker
+ * @version 22-01-2020
  */
 
 public class CommandWords
@@ -17,7 +13,7 @@ public class CommandWords
     };
 
     /**
-     * Constructor - initialise the command words.
+     * Constructor die de command words initialiseert
      */
     public CommandWords()
     {
@@ -25,9 +21,9 @@ public class CommandWords
     }
 
     /**
-     * Check whether a given String is a valid command word. 
-     * @return true if a given string is a valid command,
-     * false if it isn't.
+     * Controleert wanneer een gegeven String is een geldig command word.
+     * @return true als de gegeven String een geldig command word is,
+     * false als het geen geldig command word is.
      */
     public boolean isCommand(String aString)
     {
@@ -39,6 +35,9 @@ public class CommandWords
         return false;
     }
     
+    /**
+     * Lijst die retourneert welke geldige command words je kan gebruiken
+     */
     public String getCommandList(){
         
         String returnString = "Your command words are:";
