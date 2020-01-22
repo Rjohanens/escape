@@ -440,20 +440,27 @@ public class Game extends SoundEffects
         // of de speler het item heeft om deze deur te unlocken en
         // of de deur niet al eerder geopend is (wanneer de speler het
         // item gedropt heeft).
-        if( direction.equals(lockedDirection) && (player.isInInventory(currentRoom.getItemToUnlock()) == false) && (currentRoom.doorIsUnlocked() == false)){
+        if( direction.equals(lockedDirection) && (player.isInInventory(currentRoom.getItemToUnlock()) == false) && (currentRoom.doorIsLocked() == true) ){
             System.out.println("This door is locked! Try to find an item to unlock this exit.");
             startPlaying("music/locked_door.mp3");
             return;
         }
         
         //check dit zelfde, maar dan voor exits met een combinatie slot
-        else if( (direction.equals(combinationLockedDirection)) && (currentRoom.doorIsUnlocked() == false) && (codeIsEnterdCorrect == false) ){
+        else if( (direction.equals(combinationLockedDirection)) && (currentRoom.doorIsLocked() == true) && (codeIsEnterdCorrect == false) ){
             System.out.println("This door is locked with an combination lock! Try to find the combination.");
             System.out.println("Type 'enter (code)' to enter the combination");
         }
         
-        else{   //enter room
+        else if( (direction.equals(lockedDirection)) &&  (player.isInInventory(currentRoom.getItemToUnlock()) == true) && (currentRoom.doorIsLocked() == true)){
             currentRoom.setUnlockedDoor(direction);
+            player.setPreviousRoom(player.getCurrentRoom());
+            player.setCurrentRoom(nextRoom);
+            printLocationInfo(); 
+            //wanneer iemand een kamer binnengaat speelt een geluidje af.
+            startPlaying("music/minecraft_door.mp3");
+        }
+        else{   //enter room
             player.setPreviousRoom(player.getCurrentRoom());
             player.setCurrentRoom(nextRoom);
             printLocationInfo(); 
