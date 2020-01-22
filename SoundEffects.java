@@ -8,29 +8,28 @@ import javazoom.jl.player.FactoryRegistry;
 import javazoom.jl.player.advanced.AdvancedPlayer;
 
 /**
- * Provide basic playing of MP3 files via the javazoom library.
- * See http://www.javazoom.net/
+ * Deze klasse speelt mp3 bestanden af, wanneer ze in een andere pagina worden aangeroepen
  * 
  * @author Rick Johannes, Teijmen van der Ploeg, Lars Bosker
- * @version 2020.01.17
+ * @version 2020.01.22
  */
-public class MusicPlayer
+public class SoundEffects
 {
-    // The current player. It might be null.
+    // De huidige speler
     private AdvancedPlayer player;
     
     /**
-     * Constructor for objects of class MusicFilePlayer
+     * Constructor voor objecten van de klasse SoundEffects
      */
-    public MusicPlayer()
+    public SoundEffects()
     {
         player = null;
     }
     
     /**
-     * Start playing the given audio file.
-     * The method returns once the playing has been started.
-     * @param filename The file to be played.
+     * Speelt het gegeven mp3-bestand af.
+     * De methode retourneert als de speler is gestart.
+     * @param filename Het bestand wat afgespeeld wordt.
      */
     public void startPlaying(final String filename)
     {
@@ -63,8 +62,8 @@ public class MusicPlayer
     }
     
     /**
-     * Set up the player ready to play the given file.
-     * @param filename The name of the file to play.
+     * Maakt de speler klaas om een mp3-bestand af te spelen.
+     * @param filename Naam van het bestand wat afgespeelt gaat worden.
      */
     private void setupPlayer(String filename)
     {
@@ -83,9 +82,9 @@ public class MusicPlayer
     }
 
     /**
-     * Return an InputStream for the given file.
-     * @param filename The file to be opened.
-     * @throws IOException If the file cannot be opened.
+     * Retourneert een inputstream voor het gegeven bestand.
+     * @param filename Bestand wat geopend wordt.
+     * @throws IOException Als het bestand niet kan worden geopend.
      * @return An input stream for the file.
      */
     private InputStream getInputStream(String filename)
@@ -96,9 +95,9 @@ public class MusicPlayer
     }
 
     /**
-     * Create an audio device.
-     * @throws JavaLayerException if the device cannot be created.
-     * @return An audio device.
+     * Maakt een audio-apparaat aan.
+     * @throws JavaLayerException als het apparaat niet aangemaakt kan worden.
+     * @return een audio-apparaat.
      */
     private AudioDevice createAudioDevice()
         throws JavaLayerException
@@ -107,7 +106,7 @@ public class MusicPlayer
     }
 
     /**
-     * Terminate the player, if there is one.
+     * Beëindig de speler als er een is.
      */
     private void killPlayer()
     {

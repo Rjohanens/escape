@@ -18,12 +18,12 @@ import java.util.Stack;
  * @version 2016.02.29
  */
 
-public class Game extends MusicPlayer 
+public class Game extends SoundEffects 
 {   
     private Parser parser;
     private Player player;
     private CountdownTimer timer;
-    private MusicPlayer musicplayer;
+    private SoundEffects musicplayer;
     public boolean gameStarted = false;
     
     public static void main(String[] args) {
