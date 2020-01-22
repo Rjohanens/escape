@@ -24,7 +24,7 @@ public class Game extends SoundEffects
     private Player player;
     private CountdownTimer timer;
     private SoundEffects musicplayer;
-    public boolean gameStarted = false;
+    private boolean gameStarted = false;
     private boolean codeIsEnterdCorrect = false;
     
      // all rooms
@@ -70,7 +70,7 @@ public class Game extends SoundEffects
         
         corridor.setExits("south", garage);
         corridor.setExits("north", livingroom);
-        corridor.setExits("east", outside);
+        corridor.setExits("frontdoor", outside);
         
         livingroom.setExits("south", corridor);
         livingroom.setExits("north", kitchen);
@@ -79,12 +79,10 @@ public class Game extends SoundEffects
         kitchen.setExits("south", livingroom);
         
         bedroom.setExits("west", livingroom);
-        
-        office.setExits("south", secretroom);
 
         //set locked exits
         basement.setLockedExit("up");
-        corridor.setLockedExit("east");
+        corridor.setLockedExit("frontdoor");
     }
     
     /**
@@ -97,7 +95,7 @@ public class Game extends SoundEffects
         keyFrontDoor = new Item("key", "This looks like a key to the front door", 2);
         clock = new Item("clock", "You found the magic clock! Type 'use clock' to get 2 extra minutes", 1);
         keyFrontDoor = new Item("key", "This looks the key to the front door!", 1);
-        lever = new Item("lever", "Hmm, maybe can I use this lever to open a secret door", 2);
+        lever = new Item("lever", "Hmm, maybe can I use this lever to open a secret door..", 2);
         paper = new Item("paper", "Note to myself: I have hidden 3 notes in the house, just in case I ever forget the secret code", 1 );
         note_1 = new Item("note", "_a_9__", 1);
         note_2 = new Item("note", "___y4", 1);
@@ -146,7 +144,7 @@ public class Game extends SoundEffects
                 timer.stopTimer();
                 System.out.println("###################################");
                 System.out.println("Well done, you have escaped!");
-                System.out.println("You time was: " + (14 - timer.getMinutes()) + " minutes and " + (60%timer.getSeconds()) + " seconds."); //bereken de verstreken tijd
+                System.out.println("You time was: " + (9 - timer.getMinutes()) + " minutes and " + (60%timer.getSeconds()) + " seconds."); //bereken de verstreken tijd
                 finished = true;
                 gameStarted = false;
             }
@@ -163,7 +161,8 @@ public class Game extends SoundEffects
     {
         System.out.println();
         System.out.println("Hi there! I heard you want to know more about this game!");
-        System.out.println("You are kidnapped! Your goal is to escape within (x) minutes.");
+        System.out.println("You are kidnapped! Your goal is to escape within 10 minutes.");
+        System.out.println("Try to find the key to the front door.");
         System.out.println("You can use several items to unlock doors and for other useabilities.");
         System.out.println("Created by: Rick, Lars and Teijmen.");
         System.out.println();
@@ -272,16 +271,25 @@ public class Game extends SoundEffects
         System.out.println();
         System.out.print(parser.showCommands());
         System.out.println();
+        System.out.println("Player commands are: ");
         System.out.println("Type 'go (direction)' to move.");
         System.out.println("Type 'back' to go to back to the previous room.");
         System.out.println("Type 'take (item name)' to take an item.");
         System.out.println("Type 'drop (item name)' to drop an item.");
-        System.out.println("Type 'show' to show your current inventory + current weight.");
+        System.out.println("Type 'show (time/inventory)' to show the time or your current inventory + current weight.");
         System.out.println("Type 'beam (go/set)' to set a beam location or go to a beam location.");
+        System.out.println("Type 'enter (code)' to enter a code.");
+        System.out.println("Type 'use (item)' to use an item.");
+        System.out.println("Type 'examine (item)' to get more information about an item.");
         System.out.println("Type 'quit' to stop the game.");
+        
         System.out.println();
     }
     
+    /**
+     * 'take (item)' was entered. A player can take an item.
+     *  The item is added to the players inventory.
+     */
     private void take(Command command){
        if(!command.hasSecondWord()) {
             // if there is no second word, we don't know what to take...
@@ -313,7 +321,7 @@ public class Game extends SoundEffects
     
     /**
      * 'drop' was entered. A player can drop an item.
-     *  Check what item the player wants to drop.
+     *  Check which item the player wants to drop.
      */
     private void drop(Command command){
         if(!command.hasSecondWord()) {
@@ -595,6 +603,10 @@ public class Game extends SoundEffects
         
         //set exits to go to new room
         bedroom.setExits("secretroom", secretroom);
+        office.setExits("south", secretroom);
+        
+        //add item to secretroom
+        secretroom.addItem("note", note_3);
         
         //set locked combination exits + code to unlock
         secretroom.setCombinationLockedExit("north");
