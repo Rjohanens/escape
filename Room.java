@@ -31,7 +31,7 @@ public class Room
     private String combinationLockedExit;
     private String combinationToUnlock;
     
-    private boolean doorIsUnlocked;
+    private String unlockedDirection;
  
     /**
      * Create a room described "description". Initially, it has
@@ -154,15 +154,20 @@ public class Room
     }
     
     public void setUnlockedDoor(String direction){
-       doorIsUnlocked = true;
+       unlockedDirection = direction;
     }
     
-    public boolean doorIsUnlocked(){
-        if(doorIsUnlocked == true){
-            return true;
+   public String getUnlockedDirection(){
+       return unlockedDirection;
+    }
+    
+        
+    public boolean doorIsLocked(){
+        if(unlockedDirection != null){
+            return false;
         }
         
-        return false;
+        return true;
     }
     
     public void setCombinationLock(String combination){

@@ -27,9 +27,11 @@ public class Game extends SoundEffects
     public boolean gameStarted = false;
     private boolean codeIsEnterdCorrect = false;
     
-    private Room secretroom;
-    private Room bedroom;
-    private Room office;
+     // all rooms
+    private Room basement, livingroom, kitchen, garage, corridor, outside, secretroom, bedroom, office;
+    
+    //all items
+    private Item crowbar, clock, keyFrontDoor, lever, paper, note_1, note_2, note_3;
     
     public static void main(String[] args) {
         Game game = new Game();
@@ -46,19 +48,10 @@ public class Game extends SoundEffects
     }
 
     /**
-     * Create all the rooms, link their exits together and place items in the rooms.
+     * Create all the rooms, link their exits together.
      */
-    private void createGame()
+    private void createRooms()
     {
-        // all rooms
-        Room basement, livingroom, kitchen, garage, corridor, outside;
-        
-        //all items
-        Item crowbar, clock, keyFrontDoor, lever, paper, note_1, note_2, note_3;
-        
-        //create player
-        player = new Player(0, 10);
-        
         // create the rooms
         basement = new Room("Brrr, it's cold in the basement!");
         livingroom = new Room("Wow! This room is big! It looks like a living room!");
@@ -68,20 +61,7 @@ public class Game extends SoundEffects
         corridor = new Room("I'm walking in the corridor, I think");
         office = new Room("This looks like an office");
         outside = new Room("You are outside!");
-        
-        //create items
-        crowbar = new Item("crowbar", "With this item you can break open the basementdoor", 3);
-        keyFrontDoor = new Item("key", "This looks like a key to the front door", 2);
-        clock = new Item("clock", "You found the magic clock! Type 'use clock' to get 2 extra minutes", 1);
-        keyFrontDoor = new Item("key", "This looks the key to the front door!", 1);
-        lever = new Item("lever", "Hmm, maybe can I use this lever to open a secret door", 2);
-        paper = new Item("paper", "Note to myself: I have hidden 3 notes in the house, just in case I ever forget the secret code", 1 );
-        note_1 = new Item("note", "_a_9__", 1);
-        note_2 = new Item("note", "___y4", 1);
-        note_3 = new Item("note", "2_3__", 1);
-        
-        
-        
+
         // initialise room exits
         basement.setExits("up", garage);
         
@@ -102,6 +82,27 @@ public class Game extends SoundEffects
         
         office.setExits("south", secretroom);
 
+        //set locked exits
+        basement.setLockedExit("up");
+        corridor.setLockedExit("east");
+    }
+    
+    /**
+     * Create all items and place items in the rooms.
+     * Set items to unlock doors.
+     */
+    private void createItems(){
+        //create items
+        crowbar = new Item("crowbar", "With this item you can break open the basementdoor", 3);
+        keyFrontDoor = new Item("key", "This looks like a key to the front door", 2);
+        clock = new Item("clock", "You found the magic clock! Type 'use clock' to get 2 extra minutes", 1);
+        keyFrontDoor = new Item("key", "This looks the key to the front door!", 1);
+        lever = new Item("lever", "Hmm, maybe can I use this lever to open a secret door", 2);
+        paper = new Item("paper", "Note to myself: I have hidden 3 notes in the house, just in case I ever forget the secret code", 1 );
+        note_1 = new Item("note", "_a_9__", 1);
+        note_2 = new Item("note", "___y4", 1);
+        note_3 = new Item("note", "2_3__", 1);
+        
         //add items to rooms
         basement.addItem("crowbar", crowbar);
         
@@ -115,19 +116,17 @@ public class Game extends SoundEffects
         
         office.addItem("key", keyFrontDoor);
         
-        //set locked exits
-        basement.setLockedExit("up");
-        corridor.setLockedExit("east");
-
         //set items to unlock exit
         basement.setItemToUnlock("crowbar");
         corridor.setItemToUnlock("key");
-        
-        player.setPreviousRoom(basement); //begin room
-        player.setCurrentRoom(basement); //start game in the basement
-        
-        timer.startTimer();
-
+    }
+    
+    /**
+     * Create the player.
+     */
+    private void createPlayer(){
+         //create player
+        player = new Player(0, 10);
     }
     
     /**
@@ -441,20 +440,27 @@ public class Game extends SoundEffects
         // of de speler het item heeft om deze deur te unlocken en
         // of de deur niet al eerder geopend is (wanneer de speler het
         // item gedropt heeft).
-        if( direction.equals(lockedDirection) && (player.isInInventory(currentRoom.getItemToUnlock()) == false) && (currentRoom.doorIsUnlocked() == false)){
+        if( direction.equals(lockedDirection) && (player.isInInventory(currentRoom.getItemToUnlock()) == false) && (currentRoom.doorIsLocked() == true) ){
             System.out.println("This door is locked! Try to find an item to unlock this exit.");
             startPlaying("music/door_locked.mp3");
             return;
         }
         
         //check dit zelfde, maar dan voor exits met een combinatie slot
-        else if( (direction.equals(combinationLockedDirection)) && (currentRoom.doorIsUnlocked() == false) && (codeIsEnterdCorrect == false) ){
+        else if( (direction.equals(combinationLockedDirection)) && (currentRoom.doorIsLocked() == true) && (codeIsEnterdCorrect == false) ){
             System.out.println("This door is locked with an combination lock! Try to find the combination.");
             System.out.println("Type 'enter (code)' to enter the combination");
         }
         
-        else{   //enter room
+        else if( (direction.equals(lockedDirection)) &&  (player.isInInventory(currentRoom.getItemToUnlock()) == true) && (currentRoom.doorIsLocked() == true)){
             currentRoom.setUnlockedDoor(direction);
+            player.setPreviousRoom(player.getCurrentRoom());
+            player.setCurrentRoom(nextRoom);
+            printLocationInfo(); 
+            //wanneer iemand een kamer binnengaat speelt een geluidje af.
+            startPlaying("music/minecraft_door.mp3");
+        }
+        else{   //enter room
             player.setPreviousRoom(player.getCurrentRoom());
             player.setCurrentRoom(nextRoom);
             printLocationInfo(); 
@@ -534,17 +540,7 @@ public class Game extends SoundEffects
         
         else if( (itemToUse.equals("lever")) && (player.isInInventory(itemToUse)) && (player.itemIsUsed(item) == false)){
             player.setUsedItem(item); //add item to used items list
-            secretroom = new Room("Hmm I'm now in the secret room..");
-
-            secretroom.setExits("west", bedroom);
-            secretroom.setExits("north", office);
-            
-            bedroom.setExits("secretroom", secretroom);
-            
-            //set locked combination exits + code to unlock
-            secretroom.setCombinationLockedExit("north");
-            secretroom.setCombinationLock("2a39y4");
-            
+            generateSecretRoom(); //generate new room
             System.out.println("Lever used! A secret door opened.");
             printLocationInfo();
         }
@@ -589,6 +585,22 @@ public class Game extends SoundEffects
         }
     }
     
+    private void generateSecretRoom(){
+        
+        secretroom = new Room("Hmm I'm now in the secret room.."); //make new room
+        
+        //set exits for new room
+        secretroom.setExits("west", bedroom);
+        secretroom.setExits("north", office);
+        
+        //set exits to go to new room
+        bedroom.setExits("secretroom", secretroom);
+        
+        //set locked combination exits + code to unlock
+        secretroom.setCombinationLockedExit("north");
+        secretroom.setCombinationLock("2a39y4");
+    }
+    
     /**
      *   "Start" was entered. Create the game, rooms, player
      *   and items. Print location info about current room.
@@ -601,7 +613,16 @@ public class Game extends SoundEffects
     private void start(){
         
         if(gameStarted == false){   //if game is not started yet
-           createGame();
+           
+            //create the game
+           createRooms();
+           createItems();
+           createPlayer();
+           
+           player.setPreviousRoom(basement); //begin room
+           player.setCurrentRoom(basement); //start game in the basement
+        
+           timer.startTimer();
            printLocationInfo(); 
            gameStarted = true;
         }
