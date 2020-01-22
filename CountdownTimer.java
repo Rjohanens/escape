@@ -10,16 +10,13 @@ public class CountdownTimer
 {
     private boolean clockRunning = false;
     public boolean gameStopped = false;
-    public int secondPassed = 900; //15 min
+    public int secondPassed = 600; //10 min
     Timer timer = new Timer();
     TimerTask task = new TimerTask(){
         public void run(){
            if(clockRunning == true){
                 secondPassed--;
-                if(secondPassed == 899){
-                    System.out.println("You have 15 minutes left to escape!");
-                }
-                if(secondPassed == 600){
+                if(secondPassed == 599){
                     System.out.println("You have 10 minutes left to escape!");
                 }
                 if(secondPassed == 300){
