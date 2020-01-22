@@ -404,7 +404,7 @@ public class Game extends SoundEffects
         if(previousRoom != null){   //if there is a previous room
             player.setCurrentRoom(previousRoom);
             printLocationInfo();
-            startPlaying("music/rewind_time.mp3");
+            startPlaying("music/back.mp3");
         }else{
             System.out.println("There is no previous room");
         }
