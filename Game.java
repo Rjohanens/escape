@@ -1,21 +1,19 @@
 
 
-import java.util.Stack;
 /**
- *  This class is the main class of the "World of Zuul" application. 
- *  "World of Zuul" is a very simple, text based adventure game.  Users 
- *  can walk around some scenery. That's all. It should really be extended 
- *  to make it more interesting!
+ *  This class is the main class of the "Escape" application. 
+ *  "Escape" is a very simple, text based adventure game.  Users 
+ *  can walk around some scenery, find items and need to escape the house.
  * 
  *  To play this game, create an instance of this class and call the "play"
  *  method.
  * 
  *  This main class creates and initialises all the others: it creates all
- *  rooms, creates the parser and starts the game.  It also evaluates and
+ *  rooms, items, the player, creates the parser and starts the game.  It also evaluates and
  *  executes the commands that the parser returns.
  * 
- * @author  Michael Kölling and David J. Barnes
- * @version 2016.02.29
+ * @author  Rick Johannes, Lars Bosker, Teijmen van der Ploeg
+ * @version 2020.01.22
  */
 
 public class Game extends SoundEffects 
@@ -38,7 +36,7 @@ public class Game extends SoundEffects
         game.play();
     }
     /**
-     * Create the game and initialise its internal map.
+     * Create the game
      */
     public Game() 
     {
@@ -48,7 +46,7 @@ public class Game extends SoundEffects
     }
 
     /**
-     * Create all the rooms, link their exits together.
+     * Create all the rooms, link their exits together, lock some exits.
      */
     private void createRooms()
     {
@@ -95,7 +93,7 @@ public class Game extends SoundEffects
         keyFrontDoor = new Item("key", "This looks like a key to the front door", 2);
         clock = new Item("clock", "You found the magic clock! Type 'use clock' to get 2 extra minutes", 1);
         keyFrontDoor = new Item("key", "This looks the key to the front door!", 1);
-        lever = new Item("lever", "Hmm, maybe can I use this lever to open a secret door..", 2);
+        lever = new Item("lever", "Hmm, maybe can I use this lever to open a secret door. It says 'bedroom'", 2);
         paper = new Item("paper", "Note to myself: I have hidden 3 notes in the house, just in case I ever forget the secret code", 1 );
         note_1 = new Item("note", "_a_9__", 1);
         note_2 = new Item("note", "___y4", 1);
@@ -124,7 +122,7 @@ public class Game extends SoundEffects
      */
     private void createPlayer(){
          //create player
-        player = new Player(0, 10);
+        player = new Player(0, 5);
     }
     
     /**
@@ -144,7 +142,7 @@ public class Game extends SoundEffects
                 timer.stopTimer();
                 System.out.println("###################################");
                 System.out.println("Well done, you have escaped!");
-                System.out.println("You time was: " + (9 - timer.getMinutes()) + " minutes and " + (60%timer.getSeconds()) + " seconds."); //bereken de verstreken tijd
+                System.out.println("You had: " + timer.getMinutes() + " minutes and " + timer.getSeconds() + " seconds left."); //geef hoeveel tijd over was
                 finished = true;
                 gameStarted = false;
             }
@@ -157,6 +155,9 @@ public class Game extends SoundEffects
         System.out.println("Thank you for playing.  Good bye.");
     }
     
+    /**
+     * Print additional information about the game.
+     */
     private void about()
     {
         System.out.println();
@@ -171,7 +172,6 @@ public class Game extends SoundEffects
     /**
      * Print out information about the current room
      */
-    
     private void printLocationInfo(){
 
         if(checkWin()){     //wanneer de speler gewonnen heeft, hoeft er geen omschrijving gegeven te worden
@@ -263,8 +263,9 @@ public class Game extends SoundEffects
 
     /**
      * Print out some help information.
-     * Here we print some stupid, cryptic message and a list of the 
-     * command words.
+     * Here we print a list of all command words.
+     * The player commands are specified.
+     *
      */
     private void printHelp() 
     {
@@ -289,6 +290,8 @@ public class Game extends SoundEffects
     /**
      * 'take (item)' was entered. A player can take an item.
      *  The item is added to the players inventory.
+     *  
+     *  @param command The item the player wants to take
      */
     private void take(Command command){
        if(!command.hasSecondWord()) {
@@ -315,13 +318,15 @@ public class Game extends SoundEffects
         }
         
         else{
-            System.out.println("Can't pick up the item you want.");
+            System.out.println("Can't pick up that item, please check your weight.");
         }
     }
     
     /**
      * 'drop' was entered. A player can drop an item.
      *  Check which item the player wants to drop.
+     *  
+     *  @param command The item the player wants to drop
      */
     private void drop(Command command){
         if(!command.hasSecondWord()) {
@@ -353,6 +358,8 @@ public class Game extends SoundEffects
     /**
      * 'examine' was entered. A player can examine an item.
      *  In this case the desciption of an item will be shown.
+     *  
+     *  @param command The item the player wants to examine.
      */
     private void examineItem(Command command){
         if(!command.hasSecondWord()){
@@ -373,7 +380,11 @@ public class Game extends SoundEffects
     
     /**
      * 'show' was entered. Check if player entered
-     * 'time' or 'inventory'. 
+     * 'time' or 'inventory'.
+     * If time was entered, print out how much time is left.
+     * If inventory was entered, print out all items the player has + the currentweight.
+     * 
+     * @param What the player wants to show.
      */
     private void show(Command command){
         if(!command.hasSecondWord()){
@@ -420,6 +431,8 @@ public class Game extends SoundEffects
     /** 
      * Try to go in one direction. If there is an exit, enter
      * the new room, otherwise print an error message.
+     * 
+     * @param command The direction the player wants to go.
      */
     private void goRoom(Command command) 
     {
@@ -460,6 +473,7 @@ public class Game extends SoundEffects
             System.out.println("Type 'enter (code)' to enter the combination");
         }
         
+        //wanneer de speler een gelockte exit door kan.
         else if( (direction.equals(lockedDirection)) &&  (player.isInInventory(currentRoom.getItemToUnlock()) == true) && (currentRoom.doorIsLocked() == true)){
             currentRoom.setUnlockedDoor(direction);
             player.setPreviousRoom(player.getCurrentRoom());
@@ -468,6 +482,7 @@ public class Game extends SoundEffects
             //wanneer iemand een kamer binnengaat speelt een geluidje af.
             startPlaying("music/minecraft_door.mp3");
         }
+        //wanneer de speler een gewone exit doorgaat.
         else{   //enter room
             player.setPreviousRoom(player.getCurrentRoom());
             player.setCurrentRoom(nextRoom);
@@ -516,6 +531,7 @@ public class Game extends SoundEffects
     /**
      * "use (item)" was entered. Some items can be 'used'.
      * 
+     * @param command The item the player wants to use.
      */
     public void useItem(Command command){
         if(!command.hasSecondWord()){
@@ -528,6 +544,7 @@ public class Game extends SoundEffects
         
         Item item = player.getCurrentRoom().getItem(itemToUse); //get the Item corresponding the second word
         
+        //if the player doesn't have the item.
         if(!player.isInInventory(itemToUse)){
             System.out.println("You can only use items that are in your inventory!");
             return;
@@ -539,15 +556,15 @@ public class Game extends SoundEffects
             return;
         }
         
-        //check if item is a clock, and player has the item and item is not used before
-        else if( (itemToUse.equals("clock")) && (player.isInInventory(itemToUse)) && (player.itemIsUsed(item) == false)){ 
+        //check if item is a clock and item is not used before
+        else if( (itemToUse.equals("clock")) && (player.itemIsUsed(item) == false)){ 
             player.setUsedItem(item);   //add item to used items list
             timer.secondPassed += 120;  //add extra time
             System.out.println("Clock used! You got 2 extra minutes.");
         }
         
-        else if( (itemToUse.equals("lever")) && (player.isInInventory(itemToUse)) && (player.itemIsUsed(item) == false)){
-            player.setUsedItem(item); //add item to used items list
+        //check if item is a lever
+        else if( (itemToUse.equals("lever"))){
             generateSecretRoom(); //generate new room
             System.out.println("Lever used! A secret door opened.");
             printLocationInfo();
@@ -567,6 +584,8 @@ public class Game extends SoundEffects
      *  can enter the room. Else print error. This mehtod also
      *  checks if a player is in the room of the combination locked 
      *  exit.
+     *  
+     *  @param command The code entered by the player.
      */
     private void enter(Command command){
         if(!command.hasSecondWord()){
@@ -593,6 +612,9 @@ public class Game extends SoundEffects
         }
     }
     
+    /**
+     * Generate a new Room. Initialize exits, locked exits and items.
+     */
     private void generateSecretRoom(){
         
         secretroom = new Room("Hmm I'm now in the secret room.."); //make new room
@@ -630,15 +652,15 @@ public class Game extends SoundEffects
            createRooms();
            createItems();
            createPlayer();
-           
-           player.setPreviousRoom(basement); //begin room
+          
            player.setCurrentRoom(basement); //start game in the basement
         
-           timer.startTimer();
-           printLocationInfo(); 
+           timer.startTimer();  //start timer
+           printLocationInfo(); //print location info
            gameStarted = true;
         }
         
+        //if game is already started
         else{
             System.out.println("Game already started.");
         }

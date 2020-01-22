@@ -5,10 +5,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * class Player - geef hier een beschrijving van deze class
+ * class Player - de player van het spel 'escape'. Hier wordt het gewicht van de speler 
+ * bijgehouden (met een inventory). De historie van de kamers wordt hier opgeslagen. 
+ * Ook wordt de beamerlocatie bijgehouden, evenals welke items gebruikt zijn.
  *
- * @author (jouw naam)
- * @version (versie nummer of datum)
+ * @author Rick Johannes, Lars Bosker, Teijmen van der Ploeg
+ * @version 2020.1.22
  */
 public class Player
 {
@@ -28,6 +30,9 @@ public class Player
      * constructor Player
      * Een player krijgt een huidig gewicht (currentWeight),
      * en een max gewicht (maxWeight)
+     * 
+     * @param currentWeight Het huidige gewicht van de speler.
+     * @param maxWeight Het maximale gewicht van de speler.
      */
     public Player(int currentWeight, int maxWeight){
 
@@ -39,10 +44,18 @@ public class Player
         usedItems = new HashSet<>();
     }
     
+    /**
+     * Retouneer de huidige kamer waar de player zich bevind.
+     * 
+     * @return De huidige room van de speler.
+     */
     public Room getCurrentRoom(){
         return currentRoom;
     }
     
+    /**
+     * 
+     */
     public void setCurrentRoom(Room currentRoom) {
     this.currentRoom = currentRoom;
     }
