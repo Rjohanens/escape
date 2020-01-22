@@ -422,7 +422,7 @@ public class Game extends SoundEffects
         if(previousRoom != null){   //if there is a previous room
             player.setCurrentRoom(previousRoom);
             printLocationInfo();
-            startPlaying("music/rewind_time.mp3");
+            startPlaying("music/back.mp3");
         }else{
             System.out.println("There is no previous room");
         }
@@ -463,7 +463,7 @@ public class Game extends SoundEffects
         // item gedropt heeft).
         if( direction.equals(lockedDirection) && (player.isInInventory(currentRoom.getItemToUnlock()) == false) && (currentRoom.doorIsLocked() == true) ){
             System.out.println("This door is locked! Try to find an item to unlock this exit.");
-            startPlaying("music/locked_door.mp3");
+            startPlaying("music/door_locked.mp3");
             return;
         }
         
