@@ -1,6 +1,7 @@
 
 import java.util.HashMap;
 import java.util.Set;
+import java.util.ArrayList;
 
 /**
  * Class Room - a room in an adventure game.
@@ -18,14 +19,18 @@ import java.util.Set;
  */
 public class Room 
 {
-    private String description;
     private HashMap<String, Room> exits;
     private HashMap<String, Item> items;
     
+    private ArrayList<Item> useableItems;
+    
     private String lockedDirection;
     private String itemToUnlock;
-    
     private String objectsInRoom;
+    private String description;
+    private String combinationLockedExit;
+    private String combinationToUnlock;
+    
     private boolean doorIsUnlocked;
  
     /**
@@ -102,7 +107,7 @@ public class Room
      * @return Een lijst van alle items in de ruimte
      */
     public String getItemString(){
-        String returnString = "In this room you can find these things:";
+        String returnString = "Items in this room:";
         
         if(items.isEmpty()){
             returnString += " " + "There are no items in this room";
@@ -152,11 +157,27 @@ public class Room
        doorIsUnlocked = true;
     }
     
-    public boolean getUnlockedDoor(){
+    public boolean doorIsUnlocked(){
         if(doorIsUnlocked == true){
             return true;
         }
         
         return false;
+    }
+    
+    public void setCombinationLock(String combination){
+        combinationToUnlock = combination;
+    }
+    
+    public String getCombinationLock(){
+        return combinationToUnlock;
+    }
+    
+    public void setCombinationLockedExit(String direction){
+        combinationLockedExit = direction;
+    }
+    
+    public String getCombinationLockedExit(){
+        return combinationLockedExit;
     }
 }

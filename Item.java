@@ -9,6 +9,7 @@ public class Item
     private String description;
     private int weight;
     private String itemName;
+    private boolean isUseable;
     
     /**
      * Methode waarin de informatie van de items wordt opgeslagen

@@ -25,6 +25,11 @@ public class Game extends SoundEffects
     private CountdownTimer timer;
     private SoundEffects musicplayer;
     public boolean gameStarted = false;
+    private boolean codeIsEnterdCorrect = false;
+    
+    private Room secretroom;
+    private Room bedroom;
+    private Room office;
     
     public static void main(String[] args) {
         Game game = new Game();
@@ -46,10 +51,10 @@ public class Game extends SoundEffects
     private void createGame()
     {
         // all rooms
-        Room basement, livingroom, kitchen, bedroom, bathroom, garage, corridor, outside;
+        Room basement, livingroom, kitchen, garage, corridor, outside;
         
         //all items
-        Item crowbar, keyFrontDoor, clock;
+        Item crowbar, clock, keyFrontDoor, lever, paper, note_1, note_2, note_3;
         
         //create player
         player = new Player(0, 10);
@@ -59,15 +64,23 @@ public class Game extends SoundEffects
         livingroom = new Room("Wow! This room is big! It looks like a living room!");
         kitchen = new Room("Oh this is the kitchen!");
         garage = new Room("What a big cars in this garage!");
-        bathroom = new Room("Hmm I'm now in the badroom.");
         bedroom = new Room("Ok, this is the bedroom.");
         corridor = new Room("I'm walking in the corridor, I think");
+        office = new Room("This looks like an office");
         outside = new Room("You are outside!");
         
         //create items
         crowbar = new Item("crowbar", "With this item you can break open the basementdoor", 3);
         keyFrontDoor = new Item("key", "This looks like a key to the front door", 2);
-        clock = new Item("clock", "You found the magic clock, you got 5 extra minutes!", 1);
+        clock = new Item("clock", "You found the magic clock! Type 'use clock' to get 2 extra minutes", 1);
+        keyFrontDoor = new Item("key", "This looks the key to the front door!", 1);
+        lever = new Item("lever", "Hmm, maybe can I use this lever to open a secret door", 2);
+        paper = new Item("paper", "Note to myself: I have hidden 3 notes in the house, just in case I ever forget the secret code", 1 );
+        note_1 = new Item("note", "_a_9__", 1);
+        note_2 = new Item("note", "___y4", 1);
+        note_3 = new Item("note", "2_3__", 1);
+        
+        
         
         // initialise room exits
         basement.setExits("up", garage);
@@ -86,25 +99,30 @@ public class Game extends SoundEffects
         kitchen.setExits("south", livingroom);
         
         bedroom.setExits("west", livingroom);
-        bedroom.setExits("east", bathroom);
         
-        bathroom.setExits("west", bedroom);
-        
+        office.setExits("south", secretroom);
+
         //add items to rooms
-        livingroom.addItem("key", keyFrontDoor);
-        
         basement.addItem("crowbar", crowbar);
         
         bedroom.addItem("clock", clock);
+        bedroom.addItem("note", note_1);
+        
+        kitchen.addItem("sticky-note", note_2);
+        kitchen.addItem("lever", lever);
+        
+        livingroom.addItem("paper", paper);
+        
+        office.addItem("key", keyFrontDoor);
         
         //set locked exits
         basement.setLockedExit("up");
         corridor.setLockedExit("east");
-        
+
         //set items to unlock exit
         basement.setItemToUnlock("crowbar");
         corridor.setItemToUnlock("key");
-
+        
         player.setPreviousRoom(basement); //begin room
         player.setCurrentRoom(basement); //start game in the basement
         
@@ -138,6 +156,7 @@ public class Game extends SoundEffects
                 finished = processCommand(command);
             }
         }
+        timer.stopTimer();
         System.out.println("Thank you for playing.  Good bye.");
     }
     
@@ -161,7 +180,7 @@ public class Game extends SoundEffects
             return;
         }
         else{
-        System.out.println(player.getCurrentRoom().getLongDescription());
+            System.out.println(player.getCurrentRoom().getLongDescription());
         }
     }
     
@@ -225,6 +244,12 @@ public class Game extends SoundEffects
         else if ((commandWord.equals("beam")) && (gameStarted == true)) {
             beam(command);
         }
+        else if ((commandWord.equals("use")) && (gameStarted == true)) {
+            useItem(command);
+        }
+        else if ((commandWord.equals("enter")) && (gameStarted == true)) {
+            enter(command);
+        }
         else if (commandWord.equals("quit")) {
             wantToQuit = quit(command);
         }
@@ -265,9 +290,9 @@ public class Game extends SoundEffects
             return;
         }
         
-        String itemName = command.getSecondWord();
+        String itemName = command.getSecondWord(); //get second word
         
-        Item item = player.getCurrentRoom().getItem(itemName);
+        Item item = player.getCurrentRoom().getItem(itemName); //get Item corresponding to the second word
         
         //try picking up item
         if(item == null){
@@ -287,6 +312,10 @@ public class Game extends SoundEffects
         }
     }
     
+    /**
+     * 'drop' was entered. A player can drop an item.
+     *  Check what item the player wants to drop.
+     */
     private void drop(Command command){
         if(!command.hasSecondWord()) {
             //if there is no second word, we don't know what to drop...
@@ -294,16 +323,16 @@ public class Game extends SoundEffects
             return;
         }
         
-        String itemName = command.getSecondWord();
+        String itemName = command.getSecondWord(); //get second word
         
-        Item item = player.getInventoryByName(itemName);
+        Item item = player.getInventoryByName(itemName); //get Item corresponding to the second word
         
-        if(item == null){
+        if(item == null){   //if we can't find the item
             System.out.println("Can't find that item.");
             return;
         }
         
-        if(player.dropItem(itemName)){
+        if(player.dropItem(itemName)){  //try to drop the item
             player.getCurrentRoom().addItem(itemName, item);
             System.out.println("Item dropped.");
             startPlaying("music/SLIP.mp3");
@@ -314,15 +343,20 @@ public class Game extends SoundEffects
         }
     }
     
+    /**
+     * 'examine' was entered. A player can examine an item.
+     *  In this case the desciption of an item will be shown.
+     */
     private void examineItem(Command command){
         if(!command.hasSecondWord()){
+            //if there is no second word, we don't know what to examine
            System.out.println("Examine what? ");
            return;
         }
         
-        String itemName = command.getSecondWord();
+        String itemName = command.getSecondWord(); //get second word
         
-        if(player.getExamineString(itemName) != null){
+        if(player.getExamineString(itemName) != null){  //get item description
             System.out.println(player.getExamineString(itemName));
         }
         else{
@@ -330,20 +364,25 @@ public class Game extends SoundEffects
         }
     }
     
+    /**
+     * 'show' was entered. Check if player entered
+     * 'time' or 'inventory'. 
+     */
     private void show(Command command){
         if(!command.hasSecondWord()){
+            //if there is no second word, we don't know what to show
            System.out.println("Show inventory of time?");
            return;
         }
         
-        String showCommand = command.getSecondWord();
+        String showCommand = command.getSecondWord();   //get the second word
         
-        if(showCommand.equals("inventory")){
-            System.out.print(player.getInventory());
+        if(showCommand.equals("inventory")){    //if second word is 'inventory'
+            System.out.print(player.getInventory());    //get players inventory
             System.out.println();
-            System.out.println("Your current weight is: " + player.getCurrentWeight());
+            System.out.println("Your current weight is: " + player.getCurrentWeight()); //get players current weight
         }
-        else if (showCommand.equals("time")){
+        else if (showCommand.equals("time")){   //if second word is 'time'
             //laat de speler zien hoeveel tijd hij nog heeft
             System.out.println("You have " + timer.getMinutes() + " minutes and " + timer.getSeconds() + " seconds left.");
         }
@@ -354,13 +393,15 @@ public class Game extends SoundEffects
        
     }
     
-    /** Keep history of all the player movements.
-     *  
+    /** 
+     * 'back' was entered. Try to go to the previous room.
+     * If there is no previous room print erro.
+     * Keep history of all the player movements.
      */
     private void back(){
-        Room previousRoom = player.getPreviousRoom();
+        Room previousRoom = player.getPreviousRoom(); //try to get previous room
         
-        if(previousRoom != null){
+        if(previousRoom != null){   //if there is a previous room
             player.setCurrentRoom(previousRoom);
             printLocationInfo();
             startPlaying("music/rewind_time.mp3");
@@ -393,18 +434,26 @@ public class Game extends SoundEffects
         }
         
         String lockedDirection = currentRoom.getLockedDirection();
+        String combinationLockedDirection = currentRoom.getCombinationLockedExit();
         
         // Wanneer een speler een kant op wil gaan (direction),
         // moet worden gecheckt of deze direction locked is,
         // of de speler het item heeft om deze deur te unlocken en
         // of de deur niet al eerder geopend is (wanneer de speler het
         // item gedropt heeft).
-        if( direction.equals(lockedDirection) && (player.isInInventory(currentRoom.getItemToUnlock()) == false) && (currentRoom.getUnlockedDoor() == false)){
+        if( direction.equals(lockedDirection) && (player.isInInventory(currentRoom.getItemToUnlock()) == false) && (currentRoom.doorIsUnlocked() == false)){
             System.out.println("This door is locked! Try to find an item to unlock this exit.");
             startPlaying("music/door_locked.mp3");
             return;
         }
-        else{
+        
+        //check dit zelfde, maar dan voor exits met een combinatie slot
+        else if( (direction.equals(combinationLockedDirection)) && (currentRoom.doorIsUnlocked() == false) && (codeIsEnterdCorrect == false) ){
+            System.out.println("This door is locked with an combination lock! Try to find the combination.");
+            System.out.println("Type 'enter (code)' to enter the combination");
+        }
+        
+        else{   //enter room
             currentRoom.setUnlockedDoor(direction);
             player.setPreviousRoom(player.getCurrentRoom());
             player.setCurrentRoom(nextRoom);
@@ -422,31 +471,121 @@ public class Game extends SoundEffects
     private void beam(Command command){
         
         if(!command.hasSecondWord()){
-            // if there is no second word, we don't know where to go...
+            // if there is no second word, we don't know if the player wants to set or go to the beamlocation...
             System.out.println("Set or go?");
             return;
         }
         
-        String commandWord = command.getSecondWord();
+        String commandWord = command.getSecondWord();   //get the second word
         
-        Room currentRoom = player.getCurrentRoom();
+        Room currentRoom = player.getCurrentRoom(); //get the currentroom
         
-        if( (player.getBeamerLocation() == null) && (!commandWord.equals("set"))){
+        if( (player.getBeamerLocation() == null) && (!commandWord.equals("set"))){  //check if 'set' wasn't entered and there is no beamlocation yet
             System.out.println("No beamer location set.");
             return;
         }
         
-        if(commandWord.equals("set")){
+        if(commandWord.equals("set")){  //set a beamlocation
             player.setBeamerLocation(currentRoom);
             System.out.println("Beamer location set succesfully.");
         }
         
-        else if (commandWord.equals("go")){
+        else if (commandWord.equals("go")){ //go to the set beamlocation
             player.setPreviousRoom(currentRoom);
             player.setCurrentRoom(player.getBeamerLocation());
             System.out.println("Beam succesful.");
             printLocationInfo();
             startPlaying("music/beam_sound.mp3");
+        }
+    }
+    
+    /**
+     * "use (item)" was entered. Some items can be 'used'.
+     * 
+     */
+    public void useItem(Command command){
+        if(!command.hasSecondWord()){
+            // if there is no second word, we don't know what to use...
+            System.out.println("Use what?");
+            return;
+        }
+        
+        String itemToUse = command.getSecondWord(); //get second word so we know what item to use
+        
+        Item item = player.getCurrentRoom().getItem(itemToUse); //get the Item corresponding the second word
+        
+        if(!player.isInInventory(itemToUse)){
+            System.out.println("You can only use items that are in your inventory!");
+            return;
+        }
+        
+        
+        if(!itemToUse.equals("clock") && (!itemToUse.equals("lever")) ){
+            System.out.println("Sorry, can't use that item.");
+            return;
+        }
+        
+        //check if item is a clock, and player has the item and item is not used before
+        else if( (itemToUse.equals("clock")) && (player.isInInventory(itemToUse)) && (player.itemIsUsed(item) == false)){ 
+            player.setUsedItem(item);   //add item to used items list
+            timer.secondPassed += 120;  //add extra time
+            System.out.println("Clock used! You got 2 extra minutes.");
+        }
+        
+        else if( (itemToUse.equals("lever")) && (player.isInInventory(itemToUse)) && (player.itemIsUsed(item) == false)){
+            player.setUsedItem(item); //add item to used items list
+            secretroom = new Room("Hmm I'm now in the secret room..");
+
+            secretroom.setExits("west", bedroom);
+            secretroom.setExits("north", office);
+            
+            bedroom.setExits("secretroom", secretroom);
+            
+            //set locked combination exits + code to unlock
+            secretroom.setCombinationLockedExit("north");
+            secretroom.setCombinationLock("2a39y4");
+            
+            System.out.println("Lever used! A secret door opened.");
+            printLocationInfo();
+        }
+        else if(player.itemIsUsed(item) == true){   //if item is already used
+            System.out.println("This item is already used.");
+        }
+        else{                                       
+            System.out.println("Can't find that item");
+        }
+    }
+    
+    /**
+     * 'enter (code)' was entered. A player can enter a code 
+     *  to try and unlock combination locked doors. If the 
+     *  combination is correct, unlock door so the player
+     *  can enter the room. Else print error. This mehtod also
+     *  checks if a player is in the room of the combination locked 
+     *  exit.
+     */
+    private void enter(Command command){
+        if(!command.hasSecondWord()){
+            // if there is no second word, we don't the code...
+            System.out.println("Please enter a code");
+            return;
+        }
+        
+        String code = command.getSecondWord();  //get the entered code
+        Room currentRoom = player.getCurrentRoom(); //get the currentroom
+        
+        if(currentRoom.getDescription() != "Hmm I'm now in the secret room.."){
+            System.out.println("You can only use 'enter' in the room where a combination locked exit is.");
+            return;
+        }
+        
+        if(code.equals(currentRoom.getCombinationLock())){  //check if entered code equals the combination of that room
+            codeIsEnterdCorrect = true;
+            System.out.println("Code accepted. Opening door...");
+        }
+        
+        else{   //if wrong code is entered
+            System.out.println("Wrong combination!");
         }
     }
     
@@ -461,7 +600,7 @@ public class Game extends SoundEffects
      */
     private void start(){
         
-        if(gameStarted == false){
+        if(gameStarted == false){   //if game is not started yet
            createGame();
            printLocationInfo(); 
            gameStarted = true;
@@ -490,12 +629,7 @@ public class Game extends SoundEffects
         }
         
         return false;
-    }
-    
-    public void checkLose(){
-        
-    }
-    
+    }  
     
     /** 
      * "Quit" was entered. Check the rest of the command to see
