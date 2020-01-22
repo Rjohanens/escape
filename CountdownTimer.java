@@ -40,12 +40,22 @@ public class CountdownTimer
           
     };
     
+    /**
+     *  Retouneer het aantal minuten dat de speler nog over heeft.
+     *  
+     *  @return Het aantal minuten dat nog over is.
+     */
     public int getMinutes(){
         int timer = secondPassed;
         int minutes = secondPassed / 60;
         return minutes;
     }
     
+    /**
+     *  retouneer het aantal seconden dat de speler nog over heeft.
+     *  
+     *  @return Het aantal seconden dat de speler nog heeft.
+     */
     public int getSeconds(){
         int timer = secondPassed;
         int seconds = secondPassed % 60;
@@ -53,11 +63,17 @@ public class CountdownTimer
         return seconds;
     }
     
+    /**
+     *  Start de timer.
+     */
     public void startTimer(){
         clockRunning = true;
         timer.scheduleAtFixedRate(task,1000,1000);
     }
     
+    /**
+     *  Stop de timer.
+     */
     public void stopTimer(){
         clockRunning = false;
         gameStopped = true;

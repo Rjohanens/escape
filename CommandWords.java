@@ -1,5 +1,5 @@
 /**
- * In deze klasse staan alle command words die je in de game kunt gebruiken
+ * In deze klasse staan alle command words die je in de game kunt gebruiken.
  *
  * @author  Rick Johannes, Teijmen van der Ploeg, Lars Bosker
  * @version 22-01-2020

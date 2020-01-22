@@ -1,5 +1,5 @@
 /**
- * Deze klasse bevat de informatie van de items
+ * Deze klasse bevat de informatie van de items.
  *
  * @author Rick Johannes, Teijmen van der Ploeg, Lars Bosker
  * @version 22-01-2020
