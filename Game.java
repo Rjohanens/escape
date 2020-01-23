@@ -138,7 +138,11 @@ public class Game extends SoundEffects
         boolean finished = false;
         
         while (! finished) {
-            if(checkWin()){     //check win state
+            
+            if(timer.gameStopped == true){ //if time is up
+                finished = true;
+            }
+            else if(checkWin()){     //check win state
                 timer.stopTimer();
                 System.out.println("###################################");
                 System.out.println("Well done, you have escaped!");
@@ -314,7 +318,7 @@ public class Game extends SoundEffects
             //if true
             player.getCurrentRoom().removeItem(itemName);
             System.out.println("Item taken.");
-            startPlaying("music/MGS_ALERT.mp3");
+            startPlaying("music/pop.mp3");
         }
         
         else{
