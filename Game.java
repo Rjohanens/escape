@@ -145,6 +145,7 @@ public class Game extends SoundEffects
             else if(checkWin()){     //check win state
                 timer.stopTimer();
                 System.out.println("###################################");
+                startPlaying("music/win.mp3");
                 System.out.println("Well done, you have escaped!");
                 System.out.println("You had: " + timer.getMinutes() + " minutes and " + timer.getSeconds() + " seconds left."); //geef hoeveel tijd over was
                 finished = true;
@@ -570,6 +571,7 @@ public class Game extends SoundEffects
         //check if item is a lever
         else if( (itemToUse.equals("lever"))){
             generateSecretRoom(); //generate new room
+            startPlaying("music/secretroom.mp3");
             System.out.println("Lever used! A secret door opened.");
             printLocationInfo();
         }
@@ -608,10 +610,12 @@ public class Game extends SoundEffects
         
         if(code.equals(currentRoom.getCombinationLock())){  //check if entered code equals the combination of that room
             codeIsEnterdCorrect = true;
+            startPlaying("music/entercode.mp3");
             System.out.println("Code accepted. Opening door...");
         }
         
         else{   //if wrong code is entered
+            startPlaying("music/wrongcode.mp3");
             System.out.println("Wrong combination!");
         }
     }
