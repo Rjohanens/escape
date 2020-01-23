@@ -141,7 +141,6 @@ public class Game extends SoundEffects
             if(checkWin()){     //check win state
                 timer.stopTimer();
                 System.out.println("###################################");
-                startPlaying("music/win.mp3");
                 System.out.println("Well done, you have escaped!");
                 System.out.println("You had: " + timer.getMinutes() + " minutes and " + timer.getSeconds() + " seconds left."); //geef hoeveel tijd over was
                 finished = true;
