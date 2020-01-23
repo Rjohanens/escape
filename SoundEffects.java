@@ -62,7 +62,7 @@ public class SoundEffects
     }
     
     /**
-     * Maakt de speler klaas om een mp3-bestand af te spelen.
+     * Maakt de speler klaar om een mp3-bestand af te spelen.
      * @param filename Naam van het bestand wat afgespeelt gaat worden.
      */
     private void setupPlayer(String filename)
